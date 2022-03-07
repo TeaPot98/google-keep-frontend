@@ -1,5 +1,6 @@
 import React from 'react'
 import { styled, alpha } from '@mui/material/styles'
+import { useTheme } from '@material-ui/core/styles'
 import { 
     Toolbar,
     Box, 
@@ -58,15 +59,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     }
 }))
 
-const TopBar = () => {
+const TopBar = ({ openDrawer }) => {
     return (
         <Box>
-            <AppBar>
+            <AppBar 
+                elevation={0} 
+                sx={{
+                    borderBottomStyle: 'solid',
+                    borderBottomWidth: 1,
+                    borderBottomColor: theme => theme.palette.divider,
+                    zIndex: theme => theme.zIndex.drawer + 1
+                }}
+            >
                 <Toolbar>
                     <IconButton
                         size='large'
                         edge='start'
                         aria-label='open drawer'
+                        onClick={openDrawer}
                         sx={{ mr: 2 }}
                     >
                         <MenuIcon />
@@ -99,6 +109,11 @@ const TopBar = () => {
                         <IconButton
                             size='large'
                         >
+                            <RefreshIcon />
+                        </IconButton>
+                        <IconButton
+                            size='large'
+                        >
                             <SettingsOutlinedIcon />
                         </IconButton>
                         <IconButton
@@ -108,7 +123,6 @@ const TopBar = () => {
                             // aria-controls={menuId}
                             // aria-haspopup='true'
                             // onClick={handleProfileMenuOpen}
-                            color='inherit'
                         >
                             <AccountCircle />
                         </IconButton>
