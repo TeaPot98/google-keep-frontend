@@ -51,4 +51,4 @@ export default {
   update,
   remove,
   setToken,
-};
+}

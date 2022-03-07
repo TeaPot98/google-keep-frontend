@@ -1,13 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 import {
-  Box,
-  Toolbar,
   List,
-  CssBaseline,
-  Typography,
-  Divider,
-  IconButton,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -20,7 +14,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
-const drawerWidth = 240
+const drawerWidth = 300
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -94,9 +88,7 @@ const DrawerButton = ({ open, text, onClick, children }) => {
   )
 }
 
-const MiniDrawer = ({ open }) => {
-  const theme = useTheme()
-
+const MiniDrawer = ({ open, labels }) => {
   return (
     <Drawer variant='permanent' open={open} >
       <DrawerHeader>
@@ -109,9 +101,11 @@ const MiniDrawer = ({ open }) => {
         <DrawerButton open={open} text='Reminders'>
           <NotificationsOutlinedIcon />
         </DrawerButton>
-        <DrawerButton open={open} text='Example Label'>
-          <LabelOutlinedIcon />
-        </DrawerButton>
+        {labels.map(l => 
+          <DrawerButton key={l.id} open={open} text={l.name}>
+            <LabelOutlinedIcon />
+          </DrawerButton>
+        )}
         <DrawerButton open={open} text='Edit labels'>
           <EditOutlinedIcon />
         </DrawerButton>
