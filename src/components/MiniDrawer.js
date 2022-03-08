@@ -4,7 +4,7 @@ import {
   List,
   ListItemButton,
   ListItemIcon,
-  ListItemText,
+  ListItemText
 } from '@mui/material'
 import MuiDrawer from '@mui/material/Drawer'
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
@@ -90,33 +90,35 @@ const DrawerButton = ({ open, text, onClick, children }) => {
 
 const MiniDrawer = ({ open, labels }) => {
   return (
-    <Drawer variant='permanent' open={open} >
-      <DrawerHeader>
-        
-      </DrawerHeader>
-      <List>
-        <DrawerButton open={open} text='Notes'>
-          <LightbulbOutlinedIcon />
-        </DrawerButton>
-        <DrawerButton open={open} text='Reminders'>
-          <NotificationsOutlinedIcon />
-        </DrawerButton>
-        {labels.map(l => 
-          <DrawerButton key={l.id} open={open} text={l.name}>
-            <LabelOutlinedIcon />
+    // <ClickAwayListener onClickAway={clickAway}>
+      <Drawer variant='permanent' open={open} >
+        <DrawerHeader>
+          
+        </DrawerHeader>
+        <List>
+          <DrawerButton open={open} text='Notes'>
+            <LightbulbOutlinedIcon />
           </DrawerButton>
-        )}
-        <DrawerButton open={open} text='Edit labels'>
-          <EditOutlinedIcon />
-        </DrawerButton>
-        <DrawerButton open={open} text='Archive'>
-          <ArchiveOutlinedIcon />
-        </DrawerButton>
-        <DrawerButton open={open} text='Trash'>
-          <DeleteOutlinedIcon />
-        </DrawerButton>
-      </List>
-    </Drawer>
+          <DrawerButton open={open} text='Reminders'>
+            <NotificationsOutlinedIcon />
+          </DrawerButton>
+          {labels.map(l => 
+            <DrawerButton key={l.id} open={open} text={l.name}>
+              <LabelOutlinedIcon />
+            </DrawerButton>
+          )}
+          <DrawerButton open={open} text='Edit labels'>
+            <EditOutlinedIcon />
+          </DrawerButton>
+          <DrawerButton open={open} text='Archive'>
+            <ArchiveOutlinedIcon />
+          </DrawerButton>
+          <DrawerButton open={open} text='Trash'>
+            <DeleteOutlinedIcon />
+          </DrawerButton>
+        </List>
+      </Drawer>
+    // </ClickAwayListener>
   )
 }
 

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react'
 import TopBar from './components/TopBar'
 import MiniDrawer from './components/MiniDrawer'
 import Notes from './components/Notes'
+import NewNote from './components/NewNote'
 import labelService from './services/labels'
 import noteService from './services/notes'
 import { themeOptions as light } from './themes/light'
 import { ThemeProvider } from '@emotion/react'
 import { Box } from '@mui/system'
+import { Toolbar } from '@mui/material'
 
 const App = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
@@ -21,16 +23,46 @@ const App = () => {
         noteService.getAll().then(response => setNotes(response))
     }, [])
 
+    const addNote = async (newNote) => {
+        const addedNote = await noteService.create(newNote)
+        console.log('New note is >>> ', addedNote)
+        setNotes([...notes, addedNote])
+    }
+
     const openDrawer = () => {
         setDrawerOpen(!drawerOpen)
+    }
+
+    const onDrawerClickAway = () => {
+        console.log('Drawer clicked away')
+        if (drawerOpen) {
+            setDrawerOpen(false)
+            console.log('Drawer clicked away when it is closed')
+        }
     }
 
     return (
         <ThemeProvider theme={light}>
             <TopBar openDrawer={openDrawer} />
-            <Box sx={{ display: 'flex' }}>
-                <MiniDrawer open={drawerOpen} labels={labels} />
-                <Notes notes={notes} />
+            <Box 
+                sx={{ 
+                    display: 'flex', 
+                }}
+            >
+                <MiniDrawer 
+                    open={drawerOpen} 
+                    labels={labels} 
+                />
+                <Box 
+                    sx={{
+                        flex: 1
+                    }}
+                    onClick={onDrawerClickAway}
+                >
+                    <Toolbar />
+                    <NewNote addNote={addNote} />
+                    <Notes notes={notes} />
+                </Box>
             </Box>
         </ThemeProvider>
     )
