@@ -7,12 +7,17 @@ import {
 } from '@mui/material'
 import NoteForm from './NoteForm'
 import noteService from '../services/notes'
+import { useTheme } from '@emotion/react'
 
 const NewNote = ({ addNote }) => {
+  const theme = useTheme()
+  
   const [active, setActive] = useState(false)
   const [note, setNote] = useState({
     title: '',
-    content: ''
+    content: '',
+    pinned: false,
+    color: theme.palette.primary
   })
 
   const handleTitleChange = (event) => {

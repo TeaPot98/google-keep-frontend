@@ -19,7 +19,7 @@ import NoteButton from './NoteButton'
 import BackgroundMenu from './BackgroundMenu';
 
 const NoteContainer = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    // backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
     textAlign: 'start',
     color: theme.palette.text.primary,
@@ -27,7 +27,7 @@ const NoteContainer = styled(Paper)(({ theme }) => ({
     borderRadius: 7
 }))
 
-const Note = ({ note, deleteNote }) => {
+const Note = ({ note, deleteNote, changeColor }) => {
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
 
@@ -87,6 +87,9 @@ const Note = ({ note, deleteNote }) => {
                 elevation={0} 
                 variant="outlined"
                 className="noteContainer"
+                sx={{
+                    backgroundColor: note.color
+                }}
             >
                 <Box>
                     <Box
@@ -172,6 +175,8 @@ const Note = ({ note, deleteNote }) => {
                     open={open}
                     onClose={handleClose}
                     anchor={anchorEl}
+                    note={note}
+                    onColorChange={changeColor}
                 />
             </NoteContainer>
         </Badge>

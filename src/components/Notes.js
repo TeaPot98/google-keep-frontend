@@ -7,7 +7,7 @@ import { Masonry } from '@mui/lab'
 
 import Note from './Note'
 
-const Notes = ({ notes, deleteNote }) => {
+const Notes = ({ notes, deleteNote, changeColor }) => {
     return (
         <Box 
             sx={{ 
@@ -22,6 +22,7 @@ const Notes = ({ notes, deleteNote }) => {
                             key={n.id}
                             note={n}
                             deleteNote={deleteNote}
+                            changeColor={changeColor}
                         />
                     )}
             </Masonry>

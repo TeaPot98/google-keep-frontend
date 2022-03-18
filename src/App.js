@@ -35,6 +35,12 @@ const App = () => {
         setNotes(notes.filter(n => n.id !== noteId))
     }
 
+    const changeColor = async (updatedNote) => {
+        const response = await noteService.update(updatedNote)
+        console.log('Color updated >>> ', response)
+        setNotes(notes.map(n => n.id === updatedNote.id ? updatedNote : n))
+    }
+
     const openDrawer = () => {
         setDrawerOpen(!drawerOpen)
     }
@@ -71,6 +77,7 @@ const App = () => {
                     <Notes 
                         notes={notes} 
                         deleteNote={deleteNote}
+                        changeColor={changeColor}
                     />
                 </Box>
             </Box>
