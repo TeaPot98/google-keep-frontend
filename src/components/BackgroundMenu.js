@@ -1,27 +1,64 @@
 import React from 'react'
-import { IconButton, Popover } from '@mui/material'
-import noteService from '../services/notes'
+import { IconButton, Popover, Badge } from '@mui/material'
+import FormatColorResetOutlinedIcon from '@mui/icons-material/FormatColorResetOutlined';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import { useTheme } from '@emotion/react';
 
-const colors = ['#f28b82', '#fbbc04', '#fff475', '#ccff90', '#a7ffeb', '#cbf0f8', '#aecbfa', '#d7aefb', '#fdcfe8', '#e6c9a8', '#e8eaed']
+const colors = ['#fff', '#f28b82', '#fbbc04', '#fff475', '#ccff90', '#a7ffeb', '#cbf0f8', '#aecbfa', '#d7aefb', '#fdcfe8', '#e6c9a8', '#e8eaed']
 
-const ColorButton = ({ color, onClick }) => {
+const ColorButton = ({ color, onClick, note }) => {
     return (
-        <IconButton
-            onClick={onClick}
-            size="large"
-                sx={{
-                    backgroundColor: color,
-                    width: '32px',
-                    height: '32px',
-                    mx: 0.25,
-                    border: '2px solid transparent',
-                    "&:hover": {
+        <Badge
+            invisible={note.color !== color}
+            overlap="circular"
+            badgeContent={
+                note.color === color ? 
+                <CheckOutlinedIcon 
+                    fontSize="15px"
+                    sx={{
+                        m: 0,
+                        p: 0,
+                    }}
+                /> : 
+                null
+            }
+            sx={{
+                "& .MuiBadge-badge": {
+                    m: 0,
+                    p: 0,
+                    width: '5px',
+                    height: '10px',
+                    color: 'white',
+                    backgroundColor: theme => theme.palette.other.purple,
+                }
+            }} 
+        >
+            <IconButton
+                onClick={onClick}
+                size="large"
+                    sx={{
                         backgroundColor: color,
-                        borderColor: theme => theme.palette.text.accent
-                    }
-                }}
+                        width: '32px',
+                        height: '32px',
+                        mx: 0.25,
+                        border: theme => `2px solid ${color === '#fff' && color !== note.color ? theme.palette.divider : color === note.color ? theme.palette.other.purple : 'transparent '}`,
+                        "&:hover": {
+                            backgroundColor: color,
+                            borderColor: theme => color === note.color ? theme.palette.other.purple : theme.palette.text.accent
+                        }
+                    }}
             >
-        </IconButton>
+                {color === '#fff' ? 
+                    <FormatColorResetOutlinedIcon
+                    fontSize="small"
+                        sx={{
+                            color: theme => theme.palette.text.accent
+                        }}
+                    /> : 
+                    null
+                }
+            </IconButton>
+        </Badge>
     )
 }
 
@@ -59,9 +96,9 @@ const BackgroundMenu = ({ open, onClose, anchor, onColorChange, note }) => {
                 <ColorButton 
                     key={c} 
                     color={c}
+                    note={note}
                     onClick={() => {
                         changeColor(c)
-                        onClose()
                     }}
                 />
             )}

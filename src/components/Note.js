@@ -88,7 +88,8 @@ const Note = ({ note, deleteNote, changeColor }) => {
                 variant="outlined"
                 className="noteContainer"
                 sx={{
-                    backgroundColor: note.color
+                    backgroundColor: note.color,
+                    transition: 'background-color 0.218s ease-in-out'
                 }}
             >
                 <Box>
