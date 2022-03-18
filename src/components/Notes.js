@@ -1,24 +1,13 @@
 import React from 'react'
-import { styled } from '@mui/material/styles'
+import '../style.css'
 import {
-    Box,
-    Paper,
-    Toolbar,
-    Typography
+    Box
 } from '@mui/material'
 import { Masonry } from '@mui/lab'
 
-const Note = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    textAlign: 'start',
-    color: theme.palette.text.secondary,
-    // variant: 'outlined',
-    borderRadius: 7 
-}))
+import Note from './Note'
 
-const Notes = ({ notes }) => {
+const Notes = ({ notes, deleteNote }) => {
     return (
         <Box 
             sx={{ 
@@ -27,15 +16,14 @@ const Notes = ({ notes }) => {
             }}
             // id='masonry'
         >
-            <Masonry columns={2} spacing={1}>
-                {notes.map(n => 
-                    <Note key={n.id} elevation={0} variant="outlined">
-                        <Typography variant="subtitle1" component="p">
-                            {n.title}
-                        </Typography>
-                        <p>{n.content}</p>
-                    </Note>
-                )}
+            <Masonry spacing={2} columns={3} defaultColumns={3}>
+                    {notes.map(n => 
+                        <Note 
+                            key={n.id}
+                            note={n}
+                            deleteNote={deleteNote}
+                        />
+                    )}
             </Masonry>
         </Box>
     )

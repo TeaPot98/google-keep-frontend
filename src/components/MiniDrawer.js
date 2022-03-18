@@ -88,10 +88,14 @@ const DrawerButton = ({ open, text, onClick, children }) => {
   )
 }
 
-const MiniDrawer = ({ open, labels }) => {
+const MiniDrawer = ({ open, labels, onMouseEnter }) => {
   return (
     // <ClickAwayListener onClickAway={clickAway}>
-      <Drawer variant='permanent' open={open} >
+      <Drawer 
+        variant='permanent' 
+        open={open} 
+        onMouseEnter={onMouseEnter}
+      >
         <DrawerHeader>
           
         </DrawerHeader>

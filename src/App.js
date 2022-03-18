@@ -29,6 +29,12 @@ const App = () => {
         setNotes([...notes, addedNote])
     }
 
+    const deleteNote = async (noteId) => {
+        const response = await noteService.remove(noteId)
+        console.log('The note successfuly removed >>> ', response)
+        setNotes(notes.filter(n => n.id !== noteId))
+    }
+
     const openDrawer = () => {
         setDrawerOpen(!drawerOpen)
     }
@@ -52,6 +58,7 @@ const App = () => {
                 <MiniDrawer 
                     open={drawerOpen} 
                     labels={labels} 
+                    onMouseEnter={() => setDrawerOpen(true)}
                 />
                 <Box 
                     sx={{
@@ -61,7 +68,10 @@ const App = () => {
                 >
                     <Toolbar />
                     <NewNote addNote={addNote} />
-                    <Notes notes={notes} />
+                    <Notes 
+                        notes={notes} 
+                        deleteNote={deleteNote}
+                    />
                 </Box>
             </Box>
         </ThemeProvider>

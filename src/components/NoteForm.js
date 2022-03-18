@@ -12,7 +12,6 @@ const NoteForm = ({ note, handleTitleChange, handleContentChange }) => {
       elevation={4} 
       sx={{ 
         mt: 3, 
-        mx: 1, 
         py: 1,
         px: 2,
         cursor: 'text',
