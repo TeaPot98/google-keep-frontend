@@ -3,11 +3,11 @@ import '../style.css'
 import {
     Box
 } from '@mui/material'
-import { Masonry } from '@mui/lab'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 
 import Note from './Note'
 
-const Notes = ({ notes, deleteNote, changeColor }) => {
+const Notes = ({ notes, deleteNote, changeNote }) => {
     return (
         <Box 
             sx={{ 
@@ -16,16 +16,22 @@ const Notes = ({ notes, deleteNote, changeColor }) => {
             }}
             // id='masonry'
         >
-            <Masonry spacing={2} columns={3} defaultColumns={3}>
+            <ResponsiveMasonry 
+                columnsCountBreakPoints={{350: 1, 750: 2, 900: 3}}
+            >
+                <Masonry
+                    gutter="15px"
+                >
                     {notes.map(n => 
                         <Note 
                             key={n.id}
                             note={n}
                             deleteNote={deleteNote}
-                            changeColor={changeColor}
+                            changeNote={changeNote}
                         />
                     )}
-            </Masonry>
+                </Masonry>
+            </ResponsiveMasonry>
         </Box>
     )
 }

@@ -6,10 +6,9 @@ import {
   Box
 } from '@mui/material'
 import NoteForm from './NoteForm'
-import noteService from '../services/notes'
 import { useTheme } from '@emotion/react'
 
-const NewNote = ({ addNote }) => {
+const NewNote = ({ addNote, deleteNote }) => {
   const theme = useTheme()
   
   const [active, setActive] = useState(false)
@@ -17,7 +16,7 @@ const NewNote = ({ addNote }) => {
     title: '',
     content: '',
     pinned: false,
-    color: theme.palette.primary
+    color: theme.palette.primary.main
   })
 
   const handleTitleChange = (event) => {
@@ -28,7 +27,11 @@ const NewNote = ({ addNote }) => {
     setNote({...note, content: event.target.value})
   }
 
-  const handleClickAway = async () => {
+  const handleColorChange = (newNote) => {
+    setNote(newNote)
+  }
+
+  const closeNoteForm = async () => {
     console.log('Clicked away !')
     setActive(false)
     if (note.title !== '' || note.content !== '') {
@@ -36,7 +39,9 @@ const NewNote = ({ addNote }) => {
     }
     setNote({
       title: '',
-      content: ''
+      content: '',
+      color: theme.palette.primary.main,
+      pinned: false
     })
   }
 
@@ -49,7 +54,7 @@ const NewNote = ({ addNote }) => {
       }}
     >
       {active ? 
-        <ClickAwayListener onClickAway={handleClickAway}>
+        <ClickAwayListener onClickAway={closeNoteForm}>
           <Box
             sx={{
               mx: 'auto',
@@ -60,6 +65,10 @@ const NewNote = ({ addNote }) => {
                   handleTitleChange={handleTitleChange}
                   handleContentChange={handleContentChange}
                   note={note}
+                  deleteNote={deleteNote}
+                  changeColor={handleColorChange}
+                  onClose={closeNoteForm}
+                  newNote={true}
                 />
           </Box>
         </ClickAwayListener> :
@@ -80,8 +89,7 @@ const NewNote = ({ addNote }) => {
             variant="subtitle1" 
             component="p"
             sx={{
-              color: theme => theme.palette.text.secondary,
-              fontWeight: 'bolder'
+              color: theme => theme.palette.text.primary,
             }}
           >
             New note...

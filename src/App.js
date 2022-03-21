@@ -35,7 +35,7 @@ const App = () => {
         setNotes(notes.filter(n => n.id !== noteId))
     }
 
-    const changeColor = async (updatedNote) => {
+    const changeNote = async (updatedNote) => {
         setNotes(notes.map(n => n.id === updatedNote.id ? updatedNote : n))
         const response = await noteService.update(updatedNote)
         console.log('Color updated >>> ', response)
@@ -73,11 +73,14 @@ const App = () => {
                     onClick={onDrawerClickAway}
                 >
                     <Toolbar />
-                    <NewNote addNote={addNote} />
+                    <NewNote 
+                        addNote={addNote} 
+                        deleteNote={deleteNote}
+                    />
                     <Notes 
                         notes={notes} 
                         deleteNote={deleteNote}
-                        changeColor={changeColor}
+                        changeNote={changeNote}
                     />
                 </Box>
             </Box>
