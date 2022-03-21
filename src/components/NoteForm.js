@@ -3,6 +3,8 @@ import {
   TextField,
   Box,
   Typography,
+  ClickAwayListener,
+  Grow,
 } from '@mui/material'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
@@ -23,17 +25,19 @@ const NoteForm = ({
   changeNote, 
   onClose,
   newNote,
+  onClickAway,
+  isOpen,
   hidden = false
 }) => {
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
+  const [anchorNoteForm, setAnchorNoteForm] = useState(null)
+  const open = Boolean(anchorNoteForm)
 
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget)
+    setAnchorNoteForm(event.currentTarget)
   }
 
   const handleClose = () => {
-    setAnchorEl(null)
+    setAnchorNoteForm(null)
   }
 
   const removeNote = async () => {
@@ -42,135 +46,152 @@ const NoteForm = ({
   
   
   return (
-    <NoteContainer 
-      elevation={4} 
-      // variant="outlined"
-      className="noteContainer"
-      sx={{
-          backgroundColor: note.color,
-          transition: 'background-color 0.218s ease-in-out',
-          mt: 3, 
-          border: `1px solid ${theme => theme.palette.divider}`,
-          position: newNote ? 'default' : 'absolute',
-          zIndex: newNote ? 'auto' : 1000
-      }}
-  >
-      <Box>
-          <Box
-              sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  cursor: 'text',
-              }}
-          >
-              <TextField 
-                fullWidth 
-                variant="standard"
-                InputProps={{
-                  disableUnderline: true
-                }}
-                sx={{
-                  label: { color: theme => theme.palette.text.secondary },
-                  mt: theme => theme.spacing(1),
-                  ml: theme => theme.spacing(2),
-                }}
-                placeholder="Title"
-                onChange={handleTitleChange}
-                value={note.title}
-              />
-              <NoteButton
-                  onClick={() => {}}
-                  tooltip="Pin note"
-                  size="normal"
-              >
-                  <PushPinOutlinedIcon />
-              </NoteButton>
-          </Box>
-          <Box
-              sx={{
-                  px: theme => theme.spacing(2),
-                  pb: theme => theme.spacing(1),
-                  cursor: 'text',
-              }}
-          >
-              <TextField 
-                fullWidth 
-                multiline
-                variant="standard"
-                InputProps={{
-                  disableUnderline: true
-                }}
-                placeholder="New note..."
-                autoFocus={true}
-                onChange={handleContentChange}
-                value={note.content}
-              />
-          </Box>
-      </Box>
-      <Box
-          sx={{
-              display: 'flex',
-              justifyContent: 'end',
-              gap: theme => theme.spacing(2),
-              ml: theme => theme.spacing(2),
-              mr: theme => theme.spacing(3)
-          }}
+    <ClickAwayListener onClickAway={onClickAway}>
+      <Grow 
+        in={isOpen}
+        {...(isOpen  && newNote ? {timeout: 0} : {})}
       >
-          <NoteButton
-              onClick={handleClick}
-              tooltip="Background options"
-          >
-              <PaletteOutlinedIcon fontSize='small'/>
-          </NoteButton>
-          <NoteButton
-              onClick={() => {}}
-              tooltip="Add image"
-          >
-              <InsertPhotoOutlinedIcon fontSize='small'/>
-          </NoteButton>
-          <NoteButton
-              onClick={() => {}}
-              tooltip="Add label"
-          >
-              <LabelOutlinedIcon fontSize='small'/>
-          </NoteButton>
-          <NoteButton
-              onClick={() => {}}
-              tooltip="Archive"
-          >
-              <ArchiveOutlined fontSize='small'/>
-          </NoteButton>
-          {newNote ?
-            null : 
-            <NoteButton
-                onClick={removeNote}
-                tooltip="Delete note"
-            >
-                <DeleteOutlineOutlinedIcon fontSize='small'/>
-            </NoteButton>
-          }
-          <div style={{ flex: 1}}></div>
-          <NoteButton
-              onClick={onClose}
-              tooltip=""
-          >
-              <Typography 
+          <NoteContainer 
+            elevation={4} 
+            // variant="outlined"
+            className="noteContainer"
+            sx={{
+                backgroundColor: note.color,
+                transition: 'background-color 0.218s ease-in-out',
+                mt: newNote ? 3 : 'auto', 
+                mb: newNote ? 0 : 'auto',
+                mx: 'auto',
+                border: `1px solid ${theme => theme.palette.divider}`,
+                position: newNote ? 'default' : 'fixed',
+                display: newNote ? 'block' : isOpen ? 'inline-table' : 'none',
+                height: 'auto',
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                maxWidth: '600px',
+                maxHeight: '70vh',
+                zIndex: newNote ? 'auto' : 2001
+            }}
+        >
+            <Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        cursor: 'text',
+                    }}
+                >
+                    <TextField 
+                      fullWidth 
+                      variant="standard"
+                      InputProps={{
+                        disableUnderline: true
+                      }}
+                      sx={{
+                        label: { color: theme => theme.palette.text.secondary },
+                        mt: theme => theme.spacing(1),
+                        ml: theme => theme.spacing(2),
+                      }}
+                      placeholder="Title"
+                      onChange={handleTitleChange}
+                      value={note.title}
+                    />
+                    <NoteButton
+                        onClick={() => {}}
+                        tooltip="Pin note"
+                        size="normal"
+                    >
+                        <PushPinOutlinedIcon />
+                    </NoteButton>
+                </Box>
+                <Box
+                    sx={{
+                        px: theme => theme.spacing(2),
+                        pb: theme => theme.spacing(1),
+                        cursor: 'text',
+                    }}
+                >
+                    <TextField 
+                      fullWidth 
+                      multiline
+                      variant="standard"
+                      InputProps={{
+                        disableUnderline: true
+                      }}
+                      placeholder="New note..."
+                      autoFocus={true}
+                      onChange={handleContentChange}
+                      value={note.content}
+                    />
+                </Box>
+            </Box>
+            <Box
                 sx={{
-                  color: theme => theme.palette.text.accent
+                    display: 'flex',
+                    justifyContent: 'end',
+                    gap: theme => theme.spacing(2),
+                    ml: theme => theme.spacing(2),
+                    mr: theme => theme.spacing(3)
                 }}
-              >
-                Close
-              </Typography>
-          </NoteButton>
-      </Box>
-      <BackgroundMenu 
-          open={open}
-          onClose={handleClose}
-          anchor={anchorEl}
-          note={note}
-          onColorChange={changeNote}
-      />
-  </NoteContainer>
+            >
+                <NoteButton
+                    onClick={handleClick}
+                    tooltip="Background options"
+                >
+                    <PaletteOutlinedIcon fontSize='small'/>
+                </NoteButton>
+                <NoteButton
+                    onClick={() => {}}
+                    tooltip="Add image"
+                >
+                    <InsertPhotoOutlinedIcon fontSize='small'/>
+                </NoteButton>
+                <NoteButton
+                    onClick={() => {}}
+                    tooltip="Add label"
+                >
+                    <LabelOutlinedIcon fontSize='small'/>
+                </NoteButton>
+                <NoteButton
+                    onClick={() => {}}
+                    tooltip="Archive"
+                >
+                    <ArchiveOutlined fontSize='small'/>
+                </NoteButton>
+                {newNote ?
+                  null : 
+                  <NoteButton
+                      onClick={removeNote}
+                      tooltip="Delete note"
+                  >
+                      <DeleteOutlineOutlinedIcon fontSize='small'/>
+                  </NoteButton>
+                }
+                <div style={{ flex: 1}}></div>
+                <NoteButton
+                    onClick={onClose}
+                    tooltip=""
+                >
+                    <Typography 
+                      sx={{
+                        color: theme => theme.palette.text.accent
+                      }}
+                    >
+                      Close
+                    </Typography>
+                </NoteButton>
+            </Box>
+            <BackgroundMenu 
+                open={open}
+                onClose={handleClose}
+                anchor={anchorNoteForm}
+                note={note}
+                onColorChange={changeNote}
+            />
+        </NoteContainer>
+      </Grow>
+    </ClickAwayListener>
   )
 }
 

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { 
   Paper,
   Typography, 
-  ClickAwayListener,
   Box
 } from '@mui/material'
 import NoteForm from './NoteForm'
@@ -53,25 +52,25 @@ const NewNote = ({ addNote, deleteNote }) => {
         animationName: 'slidein',
       }}
     >
-      {active ? 
-        <ClickAwayListener onClickAway={closeNoteForm}>
-          <Box
-            sx={{
-              mx: 'auto',
-              maxWidth: '600px',
-            }}
-          >
-                <NoteForm 
-                  handleTitleChange={handleTitleChange}
-                  handleContentChange={handleContentChange}
-                  note={note}
-                  deleteNote={deleteNote}
-                  changeColor={handleColorChange}
-                  onClose={closeNoteForm}
-                  newNote={true}
-                />
-          </Box>
-        </ClickAwayListener> :
+      {active ?
+        <Box
+          sx={{
+            mx: 'auto',
+            maxWidth: '600px',
+          }}
+        >
+              <NoteForm 
+                handleTitleChange={handleTitleChange}
+                handleContentChange={handleContentChange}
+                note={note}
+                deleteNote={deleteNote}
+                changeColor={handleColorChange}
+                onClose={closeNoteForm}
+                newNote={true}
+                onClickAway={closeNoteForm}
+                isOpen={true}
+              />
+        </Box> :
         <Paper 
           elevation={4} 
           onClick={() => setActive(true)}

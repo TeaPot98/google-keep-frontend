@@ -38,7 +38,7 @@ const App = () => {
     const changeNote = async (updatedNote) => {
         setNotes(notes.map(n => n.id === updatedNote.id ? updatedNote : n))
         const response = await noteService.update(updatedNote)
-        console.log('Color updated >>> ', response)
+        console.log('Note updated >>> ', response)
     }
 
     const openDrawer = () => {
