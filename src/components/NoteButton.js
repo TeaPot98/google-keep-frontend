@@ -18,7 +18,8 @@ const NoteButton = ({ children, onClick, tooltip, size='small' }) => {
                     transition: 'color 0.2s',
                     '&:hover': {
                         color: theme => theme.palette.text.accent
-                    }
+                    },
+                    zIndex: 500
                 }}
                 onClick={onClick}
             >

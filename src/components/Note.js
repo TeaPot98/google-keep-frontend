@@ -33,11 +33,13 @@ const Note = ({ note, deleteNote, changeNote }) => {
         color: theme.palette.primary.main
     })
 
-    const handleNoteFormOpen = () => {
-        setOpenNoteForm(true)
-        setEditedNote(note)
+    const handleNoteFormOpen = (event) => {
+        if (!anchorEl) {
+            setOpenNoteForm(true)
+            setEditedNote(note)
+        }
     }
-
+    
     const handleNoteFormClose = async () => {
         if (openNoteForm) {
             setOpenNoteForm(false)
@@ -50,8 +52,9 @@ const Note = ({ note, deleteNote, changeNote }) => {
             })
         }
     }
-
+    
     const handleClick = (event) => {
+        event.stopPropagation()
         setAnchorEl(event.currentTarget)
     }
 
@@ -123,8 +126,9 @@ const Note = ({ note, deleteNote, changeNote }) => {
                         sx={{
                             backgroundColor: note.color,
                             borderColor: theme => note.color === '#fff' ? theme.palette.divider : 'transparent',
-                            transition: 'background-color 0.218s ease-in-out',
+                            transition: 'auto 0.218s ease-in-out',
                             visibility: openNoteForm ? 'hidden' : 'default',
+                            zIndex: 1,
                         }}
                     >
                         <Box>
@@ -162,12 +166,13 @@ const Note = ({ note, deleteNote, changeNote }) => {
                                 }}
                             >
                                 <Typography 
-                                    component="p"
+                                    component="pre"
                                     variant="inherit"
                                     sx={{
                                         cursor: 'default',
                                         textOverflow: 'ellipsis',
-                                        overflow: 'hidden'
+                                        overflow: 'hidden',
+                                        fontFamily: 'Roboto, sans-serif'
                                     }}
                                 >
                                     {note.content}

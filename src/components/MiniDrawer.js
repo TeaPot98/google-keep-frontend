@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { styled, useTheme } from '@mui/material/styles'
 import {
   List,
@@ -63,28 +64,49 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   })
 )
 
-const DrawerButton = ({ open, text, onClick, children }) => {
+const DrawerButton = ({ open, text, linkUrl, children }) => {
+  const location = useLocation().pathname
+  const isActive = linkUrl === decodeURIComponent(location)
+  // console.log('The linkUrl for DrawerButton >>> ', linkUrl)
   return (
     <ListItemButton
       // onClick={onClick}
+      disableRipple={true}
+      component={Link}
+      to={linkUrl}
       sx={{
         minHeight: 48,
         justifyContent: open ? 'initial' : 'center',
-        px: 2.5
+        px: 2.5,
+        width: open ? 'auto' : '48px',
+        mx: 'auto',
+        backgroundColor: theme => isActive ? theme.palette.secondary.main : 'default',
+        borderRadius: open ? '0 24px 24px 0' : '24px',
+        "&:hover": {
+          backgroundColor: theme => isActive ? theme.palette.secondary.main : 'none'
+        },
       }}
     >
       <ListItemIcon
         sx={{
           minWidth: 0,
           mr: open ? 3 : 'auto',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          color: theme => isActive ? theme.palette.button.accent : theme.palette.button.primary,
         }}
       >
         {/* Icon */}
         {children}
       </ListItemIcon>
-      <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-        </ListItemButton>
+      <ListItemText 
+        primary={text} 
+        sx={{ 
+          opacity: open ? 1 : 0,
+          color: theme => theme.palette.button.accent,
+          textDecoration: 'none'
+        }} 
+      />
+    </ListItemButton>
   )
 }
 
@@ -100,24 +122,24 @@ const MiniDrawer = ({ open, labels, onMouseEnter }) => {
           
         </DrawerHeader>
         <List>
-          <DrawerButton open={open} text='Notes'>
+          <DrawerButton open={open} text='Notes' linkUrl="/home">
             <LightbulbOutlinedIcon />
           </DrawerButton>
-          <DrawerButton open={open} text='Reminders'>
+          <DrawerButton open={open} text='Reminders' linkUrl="/reminders">
             <NotificationsOutlinedIcon />
           </DrawerButton>
           {labels.map(l => 
-            <DrawerButton key={l.id} open={open} text={l.name}>
+            <DrawerButton key={l.id} open={open} text={l.name} linkUrl={`/label/${l.name}`}>
               <LabelOutlinedIcon />
             </DrawerButton>
           )}
-          <DrawerButton open={open} text='Edit labels'>
+          <DrawerButton open={open} text='Edit labels' linkUrl={''}>
             <EditOutlinedIcon />
           </DrawerButton>
-          <DrawerButton open={open} text='Archive'>
+          <DrawerButton open={open} text='Archive' linkUrl="/archive">
             <ArchiveOutlinedIcon />
           </DrawerButton>
-          <DrawerButton open={open} text='Trash'>
+          <DrawerButton open={open} text='Trash' linkUrl="/trash">
             <DeleteOutlinedIcon />
           </DrawerButton>
         </List>

@@ -89,7 +89,7 @@ const NoteForm = ({
                         disableUnderline: true
                       }}
                       sx={{
-                        label: { color: theme => theme.palette.text.secondary },
+                        label: { color: theme => theme.palette.text.accent },
                         mt: theme => theme.spacing(1),
                         ml: theme => theme.spacing(2),
                       }}

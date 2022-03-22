@@ -31,7 +31,7 @@ const NewNote = ({ addNote, deleteNote }) => {
   }
 
   const closeNoteForm = async () => {
-    console.log('Clicked away !')
+    // console.log('Clicked away !')
     setActive(false)
     if (note.title !== '' || note.content !== '') {
       await addNote(note)

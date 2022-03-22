@@ -89,6 +89,7 @@ const BackgroundMenu = ({ open, onClose, anchor, onColorChange, note }) => {
                     display: 'flex',
                     borderRadius: 7,
                     px: 1,
+                    zIndex: 2002,
                 }
             }}
         >

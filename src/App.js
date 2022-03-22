@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import TopBar from './components/TopBar'
-import MiniDrawer from './components/MiniDrawer'
-import Notes from './components/Notes'
-import NewNote from './components/NewNote'
-import labelService from './services/labels'
-import noteService from './services/notes'
 import { themeOptions as light } from './themes/light'
 import { ThemeProvider } from '@emotion/react'
 import { Box } from '@mui/system'
 import { Toolbar } from '@mui/material'
+import {
+    BrowserRouter as Router, 
+    Routes, Route, Link, useNavigate
+} from 'react-router-dom'
+
+import labelService from './services/labels'
+import noteService from './services/notes'
+
+import TopBar from './components/TopBar'
+import MiniDrawer from './components/MiniDrawer'
+import Notes from './components/Notes'
+import NewNote from './components/NewNote'
 
 const App = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
@@ -46,10 +52,10 @@ const App = () => {
     }
 
     const onDrawerClickAway = () => {
-        console.log('Drawer clicked away')
+        // console.log('Drawer clicked away')
         if (drawerOpen) {
             setDrawerOpen(false)
-            console.log('Drawer clicked away when it is closed')
+            // console.log('Drawer clicked away when it is closed')
         }
     }
 
@@ -77,11 +83,34 @@ const App = () => {
                         addNote={addNote} 
                         deleteNote={deleteNote}
                     />
-                    <Notes 
-                        notes={notes} 
-                        deleteNote={deleteNote}
-                        changeNote={changeNote}
-                    />
+                    <Routes>
+                        <Route 
+                            path="/home"
+                            element={
+                                <Notes 
+                                    notes={notes} 
+                                    deleteNote={deleteNote}
+                                    changeNote={changeNote}
+                                />
+                            }
+                        />
+                        <Route 
+                            path="/reminders"
+                            element={<></>}
+                        />
+                        <Route 
+                            path="/label/:labelName"
+                            element={<></>}
+                        />
+                        <Route 
+                            path="/archive"
+                            element={<></>}
+                        />
+                        <Route 
+                            path="/trash"
+                            element={<></>}
+                        />
+                    </Routes>
                 </Box>
             </Box>
         </ThemeProvider>
