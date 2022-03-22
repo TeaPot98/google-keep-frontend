@@ -70,7 +70,7 @@ const NoteForm = ({
                 top: 0,
                 bottom: 0,
                 maxWidth: '600px',
-                maxHeight: '70vh',
+                // maxHeight: '70vh',
                 zIndex: newNote ? 'auto' : 2001
             }}
         >
@@ -110,6 +110,8 @@ const NoteForm = ({
                         px: theme => theme.spacing(2),
                         pb: theme => theme.spacing(1),
                         cursor: 'text',
+                        maxHeight: '60vh',
+                        overflow: 'auto',
                     }}
                 >
                     <TextField 

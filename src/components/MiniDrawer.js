@@ -66,6 +66,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const DrawerButton = ({ open, text, linkUrl, children }) => {
   const location = useLocation().pathname
+  // const location = "/home"
   const isActive = linkUrl === decodeURIComponent(location)
   // console.log('The linkUrl for DrawerButton >>> ', linkUrl)
   return (

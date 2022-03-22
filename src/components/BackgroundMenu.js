@@ -34,7 +34,11 @@ const ColorButton = ({ color, onClick, note }) => {
             }} 
         >
             <IconButton
-                onClick={onClick}
+                disableRipple={true}
+                onClick={() => {
+                    onClick()
+                    console.log('Color button clicked!')
+                }}
                 size="large"
                     sx={{
                         backgroundColor: color,
@@ -64,8 +68,8 @@ const ColorButton = ({ color, onClick, note }) => {
 
 const BackgroundMenu = ({ open, onClose, anchor, onColorChange, note }) => {
 
-    const changeColor = async (newColor) => {
-        await onColorChange({
+    const changeColor = (newColor) => {
+        onColorChange({
             ...note,
             color: newColor
         })
@@ -85,11 +89,11 @@ const BackgroundMenu = ({ open, onClose, anchor, onColorChange, note }) => {
                 horizontal: 'center'
             }}
             sx={{
-                "&": {
-                    display: 'flex',
-                    borderRadius: 7,
-                    px: 1,
-                    zIndex: 2002,
+                display: 'flex',
+                zIndex: 2002,
+                "& .MuiPopover-paper": {
+                    borderRadius: '7px',
+                    padding: 1,
                 }
             }}
         >

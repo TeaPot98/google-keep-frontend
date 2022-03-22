@@ -22,27 +22,31 @@ const App = () => {
     const [notes, setNotes] = useState([])
 
     useEffect(() => {
+        console.log('Fetching labels...')
         labelService.getAll().then(response => setLabels(response))
     }, [])
 
     useEffect(() => {
+        console.log('Fetching notes...')
         noteService.getAll().then(response => setNotes(response))
     }, [])
 
     const addNote = async (newNote) => {
         const addedNote = await noteService.create(newNote)
-        console.log('New note is >>> ', addedNote)
         setNotes([...notes, addedNote])
+        console.log('New note is >>> ', addedNote)
     }
 
     const deleteNote = async (noteId) => {
+        setNotes(notes.filter(n => n.id !== noteId))
         const response = await noteService.remove(noteId)
         console.log('The note successfuly removed >>> ', response)
-        setNotes(notes.filter(n => n.id !== noteId))
     }
 
     const changeNote = async (updatedNote) => {
+        // console.log('Changing note started')
         setNotes(notes.map(n => n.id === updatedNote.id ? updatedNote : n))
+        // console.log('Updated notes list')
         const response = await noteService.update(updatedNote)
         console.log('Note updated >>> ', response)
     }
@@ -111,6 +115,11 @@ const App = () => {
                             element={<></>}
                         />
                     </Routes>
+                    {/* <Notes 
+                        notes={notes} 
+                        deleteNote={deleteNote}
+                        changeNote={changeNote}
+                    /> */}
                 </Box>
             </Box>
         </ThemeProvider>

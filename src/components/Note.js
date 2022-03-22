@@ -53,7 +53,7 @@ const Note = ({ note, deleteNote, changeNote }) => {
         }
     }
     
-    const handleClick = (event) => {
+    const openBackgroundMenu = (event) => {
         event.stopPropagation()
         setAnchorEl(event.currentTarget)
     }
@@ -62,7 +62,8 @@ const Note = ({ note, deleteNote, changeNote }) => {
         setAnchorEl(null)
     }
 
-    const removeNote = async () => {
+    const removeNote = async (event) => {
+        event.stopPropagation()
         await deleteNote(note.id)
     }
 
@@ -117,114 +118,115 @@ const Note = ({ note, deleteNote, changeNote }) => {
                     }
                 }}
             >
-                <Fade in={true}>
-                    <NoteContainer 
-                        elevation={0} 
-                        variant="outlined"
-                        className="noteContainer"
-                        onClick={handleNoteFormOpen}
-                        sx={{
-                            backgroundColor: note.color,
-                            borderColor: theme => note.color === '#fff' ? theme.palette.divider : 'transparent',
-                            transition: 'auto 0.218s ease-in-out',
-                            visibility: openNoteForm ? 'hidden' : 'default',
-                            zIndex: 1,
-                        }}
-                    >
-                        <Box>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between'
-                                }}
-                            >
-                                <Typography 
-                                    variant="subtitle1" 
-                                    component="p"
-                                    sx={{
-                                        mt: theme => theme.spacing(1),
-                                        ml: theme => theme.spacing(2),
-                                        cursor: 'default',
-                                        color: theme => theme.palette.text.accent,
-                                        textOverflow: 'ellipsis',
-                                        overflow: 'hidden'
-                                    }}
-                                >
-                                    {note.title}
-                                </Typography>
-                                <NoteButton
-                                    onClick={() => {}}
-                                    tooltip="Pin note"
-                                    size="normal"
-                                >
-                                    <PushPinOutlinedIcon />
-                                </NoteButton>
-                            </Box>
-                            <Box
-                                sx={{
-                                    padding: theme => theme.spacing(2)
-                                }}
-                            >
-                                <Typography 
-                                    component="pre"
-                                    variant="inherit"
-                                    sx={{
-                                        cursor: 'default',
-                                        textOverflow: 'ellipsis',
-                                        overflow: 'hidden',
-                                        fontFamily: 'Roboto, sans-serif'
-                                    }}
-                                >
-                                    {note.content}
-                                </Typography>
-                            </Box>
-                        </Box>
+                <NoteContainer 
+                    elevation={0} 
+                    variant="outlined"
+                    className="noteContainer"
+                    onClick={handleNoteFormOpen}
+                    sx={{
+                        backgroundColor: note.color,
+                        borderColor: theme => note.color === '#fff' ? theme.palette.divider : 'transparent',
+                        transition: 'all 0.218s ease-in-out',
+                        visibility: openNoteForm ? 'hidden' : 'default',
+                        zIndex: 1,
+                    }}
+                >
+                    <Box>
                         <Box
                             sx={{
                                 display: 'flex',
-                                justifyContent: 'end'
+                                justifyContent: 'space-between'
                             }}
                         >
-                            <NoteButton
-                                onClick={handleClick}
-                                tooltip="Background options"
+                            <Typography 
+                                variant="subtitle1" 
+                                component="p"
+                                sx={{
+                                    mt: theme => theme.spacing(1),
+                                    ml: theme => theme.spacing(2),
+                                    cursor: 'default',
+                                    color: theme => theme.palette.text.accent,
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden'
+                                }}
                             >
-                                <PaletteOutlinedIcon fontSize='small'/>
-                            </NoteButton>
-                            <NoteButton
-                                onClick={() => {}}
-                                tooltip="Add image"
-                            >
-                                <InsertPhotoOutlinedIcon fontSize='small'/>
-                            </NoteButton>
-                            <NoteButton
-                                onClick={() => {}}
-                                tooltip="Add label"
-                            >
-                                <LabelOutlinedIcon fontSize='small'/>
-                            </NoteButton>
+                                {note.title}
+                            </Typography>
                             <NoteButton
                                 onClick={() => {}}
-                                tooltip="Archive"
+                                tooltip="Pin note"
+                                size="normal"
                             >
-                                <ArchiveOutlined fontSize='small'/>
-                            </NoteButton>
-                            <NoteButton
-                                onClick={removeNote}
-                                tooltip="Delete note"
-                            >
-                                <DeleteOutlineOutlinedIcon fontSize='small'/>
+                                <PushPinOutlinedIcon />
                             </NoteButton>
                         </Box>
-                        <BackgroundMenu 
-                            open={open}
-                            onClose={handleClose}
-                            anchor={anchorEl}
-                            note={note}
-                            onColorChange={changeNote}
-                        />
-                    </NoteContainer>
-                </Fade>
+                        <Box
+                            sx={{
+                                px: theme => theme.spacing(2),
+                                maxHeight: '300px',
+                                overflow: 'hidden'
+                            }}
+                        >
+                            <Typography 
+                                component="pre"
+                                variant="inherit"
+                                sx={{
+                                    cursor: 'default',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    fontFamily: 'Roboto, sans-serif',
+                                    whiteSpace: 'pre-wrap',
+                                }}
+                            >
+                                {note.content}
+                            </Typography>
+                        </Box>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'end'
+                        }}
+                    >
+                        <NoteButton
+                            onClick={openBackgroundMenu}
+                            tooltip="Background options"
+                        >
+                            <PaletteOutlinedIcon fontSize='small'/>
+                        </NoteButton>
+                        <NoteButton
+                            onClick={() => {}}
+                            tooltip="Add image"
+                        >
+                            <InsertPhotoOutlinedIcon fontSize='small'/>
+                        </NoteButton>
+                        <NoteButton
+                            onClick={() => {}}
+                            tooltip="Add label"
+                        >
+                            <LabelOutlinedIcon fontSize='small'/>
+                        </NoteButton>
+                        <NoteButton
+                            onClick={() => {}}
+                            tooltip="Archive"
+                        >
+                            <ArchiveOutlined fontSize='small'/>
+                        </NoteButton>
+                        <NoteButton
+                            onClick={removeNote}
+                            tooltip="Delete note"
+                        >
+                            <DeleteOutlineOutlinedIcon fontSize='small'/>
+                        </NoteButton>
+                    </Box>
+                    <BackgroundMenu 
+                        open={open}
+                        onClose={handleClose}
+                        anchor={anchorEl}
+                        note={note}
+                        onColorChange={changeNote}
+                    />
+                </NoteContainer>
             </Badge>
             <Fade in={openNoteForm}>
                 <Box
