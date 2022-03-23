@@ -66,9 +66,13 @@ const ColorButton = ({ color, onClick, note }) => {
     )
 }
 
-const BackgroundMenu = ({ open, onClose, anchor, onColorChange, note }) => {
+const BackgroundMenu = ({ open, onClose, anchor, onColorChange, note, handleEditNote = (c) => {} }) => {
 
     const changeColor = (newColor) => {
+        handleEditNote({
+            ...note,
+            color: newColor
+        })
         onColorChange({
             ...note,
             color: newColor

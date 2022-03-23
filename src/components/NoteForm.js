@@ -19,8 +19,7 @@ import BackgroundMenu from './BackgroundMenu';
 
 const NoteForm = ({ 
   note, 
-  handleTitleChange, 
-  handleContentChange, 
+  handleEditNote, 
   deleteNote, 
   changeNote, 
   onClose,
@@ -47,10 +46,10 @@ const NoteForm = ({
   
   return (
     <ClickAwayListener onClickAway={onClickAway}>
-      <Grow 
+      {/* <Grow 
         in={isOpen}
         {...(isOpen  && newNote ? {timeout: 0} : {})}
-      >
+      > */}
           <NoteContainer 
             elevation={4} 
             // variant="outlined"
@@ -94,7 +93,10 @@ const NoteForm = ({
                         ml: theme => theme.spacing(2),
                       }}
                       placeholder="Title"
-                      onChange={handleTitleChange}
+                      onChange={(event) => handleEditNote({
+                        ...note,
+                        title: event.target.value
+                      })}
                       value={note.title}
                     />
                     <NoteButton
@@ -123,7 +125,10 @@ const NoteForm = ({
                       }}
                       placeholder="New note..."
                       autoFocus={true}
-                      onChange={handleContentChange}
+                      onChange={(event) => handleEditNote({
+                        ...note,
+                        content: event.target.value
+                      })}
                       value={note.content}
                     />
                 </Box>
@@ -190,9 +195,10 @@ const NoteForm = ({
                 anchor={anchorNoteForm}
                 note={note}
                 onColorChange={changeNote}
+                handleEditNote={handleEditNote}
             />
         </NoteContainer>
-      </Grow>
+      {/* </Grow> */}
     </ClickAwayListener>
   )
 }

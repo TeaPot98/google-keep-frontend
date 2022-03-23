@@ -74,7 +74,7 @@ const App = () => {
                 <MiniDrawer 
                     open={drawerOpen} 
                     labels={labels} 
-                    onMouseEnter={() => setDrawerOpen(true)}
+                    // onMouseEnter={() => setDrawerOpen(true)}
                 />
                 <Box 
                     sx={{
@@ -93,6 +93,7 @@ const App = () => {
                             element={
                                 <Notes 
                                     notes={notes} 
+                                    labels={labels}
                                     deleteNote={deleteNote}
                                     changeNote={changeNote}
                                 />

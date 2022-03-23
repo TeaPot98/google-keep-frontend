@@ -79,8 +79,9 @@ const DrawerButton = ({ open, text, linkUrl, children }) => {
         minHeight: 48,
         justifyContent: open ? 'initial' : 'center',
         px: 2.5,
-        width: open ? 'auto' : '48px',
-        mx: 'auto',
+        width: open ? 'none' : '48px',
+        transition: 'border-radius 0.218s ease-in-out',
+        mx: open ? 0 : 1,
         backgroundColor: theme => isActive ? theme.palette.secondary.main : 'default',
         borderRadius: open ? '0 24px 24px 0' : '24px',
         "&:hover": {
@@ -104,7 +105,8 @@ const DrawerButton = ({ open, text, linkUrl, children }) => {
         sx={{ 
           opacity: open ? 1 : 0,
           color: theme => theme.palette.button.accent,
-          textDecoration: 'none'
+          textDecoration: 'none',
+          transition: 'opacity 0.218s easy-in-out',
         }} 
       />
     </ListItemButton>

@@ -20,11 +20,19 @@ import NoteButton from './NoteButton'
 import BackgroundMenu from './BackgroundMenu';
 import NoteContainer from './NoteContainer';
 import NoteForm from './NoteForm';
+import LabelMenu from './LabelMenu'
 
-const Note = ({ note, deleteNote, changeNote }) => {
+const Note = ({ note, labels, deleteNote, changeNote }) => {
     const theme = useTheme()
-    const [anchorEl, setAnchorEl] = useState(null)
-    const open = Boolean(anchorEl)
+
+    // Background menu anchor
+    const [backgroundAnchorEl, setBackgroundAnchorEl] = useState(null)
+    const backgroundMenuOpen = Boolean(backgroundAnchorEl)
+
+    // Label menu anchor
+    const [labelAnchorEl, setLabelAnchorEl] = useState(null)
+    const labelMenuOpen = Boolean(labelAnchorEl)
+
     const [openNoteForm, setOpenNoteForm] = useState(false)
     const [editedNote, setEditedNote] = useState({
         title: '',
@@ -33,13 +41,13 @@ const Note = ({ note, deleteNote, changeNote }) => {
         color: theme.palette.primary.main
     })
 
+    // Note form functions
     const handleNoteFormOpen = (event) => {
-        if (!anchorEl) {
+        if (!backgroundAnchorEl && !labelAnchorEl) {
             setOpenNoteForm(true)
             setEditedNote(note)
         }
     }
-    
     const handleNoteFormClose = async () => {
         if (openNoteForm) {
             setOpenNoteForm(false)
@@ -53,13 +61,22 @@ const Note = ({ note, deleteNote, changeNote }) => {
         }
     }
     
+    // Background menu functions
     const openBackgroundMenu = (event) => {
         event.stopPropagation()
-        setAnchorEl(event.currentTarget)
+        setBackgroundAnchorEl(event.currentTarget)
+    }
+    const closeBackgroundMenu = () => {
+        setBackgroundAnchorEl(null)
     }
 
-    const handleClose = () => {
-        setAnchorEl(null)
+    // Label menu functions
+    const openLabelMenu = (event) => {
+        event.stopPropagation()
+        setLabelAnchorEl(event.currentTarget)
+    }
+    const closeLabelMenu = () => {
+        setLabelAnchorEl(null)
     }
 
     const removeNote = async (event) => {
@@ -67,12 +84,9 @@ const Note = ({ note, deleteNote, changeNote }) => {
         await deleteNote(note.id)
     }
 
-    const handleTitleChange = (event) => {
-        setEditedNote({...note, title: event.target.value})
-    } 
-
-    const handleContentChange = (event) => {
-        setEditedNote({...note, content: event.target.value})
+    // Updates the editedNote to keep state up to date while editing
+    const handleEditNote = (updatedNote) => {
+        setEditedNote(updatedNote)
     }
     
     return (
@@ -201,7 +215,7 @@ const Note = ({ note, deleteNote, changeNote }) => {
                             <InsertPhotoOutlinedIcon fontSize='small'/>
                         </NoteButton>
                         <NoteButton
-                            onClick={() => {}}
+                            onClick={openLabelMenu}
                             tooltip="Add label"
                         >
                             <LabelOutlinedIcon fontSize='small'/>
@@ -220,11 +234,19 @@ const Note = ({ note, deleteNote, changeNote }) => {
                         </NoteButton>
                     </Box>
                     <BackgroundMenu 
-                        open={open}
-                        onClose={handleClose}
-                        anchor={anchorEl}
+                        open={backgroundMenuOpen}
+                        onClose={closeBackgroundMenu}
+                        anchor={backgroundAnchorEl}
                         note={note}
                         onColorChange={changeNote}
+                    />
+                    <LabelMenu
+                        anchor={labelAnchorEl}
+                        open={labelMenuOpen}
+                        onClose={closeLabelMenu}
+                        note={note}
+                        labels={labels}
+                        changeNote={changeNote}
                     />
                 </NoteContainer>
             </Badge>
@@ -248,8 +270,7 @@ const Note = ({ note, deleteNote, changeNote }) => {
                 </Box>
             </Fade>
             <NoteForm 
-                handleTitleChange={handleTitleChange}
-                handleContentChange={handleContentChange}
+                handleEditNote={handleEditNote}
                 note={editedNote}
                 deleteNote={deleteNote}
                 changeNote={changeNote}
