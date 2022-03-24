@@ -7,7 +7,7 @@ import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 
 import Note from './Note'
 
-const Notes = ({ notes, labels, deleteNote, changeNote }) => {
+const Notes = ({ notes, labels, deleteNote, changeNote, createLabel }) => {
     return (
         <Box 
             sx={{ 
@@ -29,6 +29,7 @@ const Notes = ({ notes, labels, deleteNote, changeNote }) => {
                             labels={labels}
                             deleteNote={deleteNote}
                             changeNote={changeNote}
+                            createLabel={createLabel}
                         />
                     )}
                 </Masonry>

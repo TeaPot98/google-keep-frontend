@@ -12,12 +12,16 @@ const getAll = () => {
     return request.then(response => response.data)
 }
 
-const create = async (noteObject) => {
+const create = async (newLabel) => {
     const config = {
         headers: { Authorization: token },
     };
 
-    const response = await axios.post(baseUrl, noteObject, config);
+    const labelObject = {
+        name: newLabel
+    }
+
+    const response = await axios.post(baseUrl, labelObject, config);
     return response.data;
 };
 

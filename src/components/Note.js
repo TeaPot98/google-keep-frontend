@@ -22,7 +22,7 @@ import NoteContainer from './NoteContainer';
 import NoteForm from './NoteForm';
 import LabelMenu from './LabelMenu'
 
-const Note = ({ note, labels, deleteNote, changeNote }) => {
+const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
     const theme = useTheme()
 
     // Background menu anchor
@@ -247,6 +247,7 @@ const Note = ({ note, labels, deleteNote, changeNote }) => {
                         note={note}
                         labels={labels}
                         changeNote={changeNote}
+                        createLabel={createLabel}
                     />
                 </NoteContainer>
             </Badge>

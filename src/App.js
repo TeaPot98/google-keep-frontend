@@ -51,6 +51,12 @@ const App = () => {
         console.log('Note updated >>> ', response)
     }
 
+    const createLabel = async (newLabel) => {
+        const addedLabel = await labelService.create(newLabel)
+        setLabels([...labels, addedLabel])
+        return addedLabel
+    }
+
     const openDrawer = () => {
         setDrawerOpen(!drawerOpen)
     }
@@ -96,6 +102,7 @@ const App = () => {
                                     labels={labels}
                                     deleteNote={deleteNote}
                                     changeNote={changeNote}
+                                    createLabel={createLabel}
                                 />
                             }
                         />
