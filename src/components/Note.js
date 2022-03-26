@@ -94,7 +94,8 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
     const handleEditNote = (updatedNote) => {
         setEditedNote(updatedNote)
     }
-    
+
+    // console.log('The note from Note', note)
     return (
         <>
             <Badge
@@ -247,6 +248,7 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                         note={note}
                         onColorChange={changeNote}
                     />
+                    {/* {console.log('Note sent to LabelMenu', note)} */}
                     <LabelMenu
                         anchor={labelAnchorEl}
                         open={labelMenuOpen}
