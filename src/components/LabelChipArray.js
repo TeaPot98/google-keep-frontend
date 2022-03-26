@@ -8,8 +8,14 @@ import {
 const LabelChipArray = ({ labels }) => {
     return (
         <Box>
-            {labels.map(l => 
-                <Chip></Chip>
+            {labels.map(label => 
+                <Chip
+                    key={label.id}
+                    size="small"
+                    label={label.name}
+                    onClick={() => {}}
+                    onDelete={() => {}}
+                />
             )}
         </Box>
     )
