@@ -45,10 +45,14 @@ const App = () => {
 
     const changeNote = async (updatedNote) => {
         // console.log('Changing note started')
-        setNotes(notes.map(n => n.id === updatedNote.id ? updatedNote : n))
+        setNotes(notes.map(n => n.id === updatedNote.id ? {
+            ...updatedNote,
+            labels: labels.filter(l => updatedNote.labels.includes(l.id))
+        } : n))
+        console.log('The note sent to update >>> ', updatedNote)
         // console.log('Updated notes list')
         const response = await noteService.update(updatedNote)
-        console.log('Note updated >>> ', response)
+        // console.log('Note updated >>> ', response)
     }
 
     const createLabel = async (newLabel) => {

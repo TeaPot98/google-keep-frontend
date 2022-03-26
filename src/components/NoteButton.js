@@ -9,6 +9,9 @@ const NoteButton = ({ children, onClick, tooltip, size='small' }) => {
         <Tooltip 
             title={tooltip}
             className="noteButton"
+            sx={{
+                zIndex: 2002,
+            }}
         >
             <IconButton
                 size={size}

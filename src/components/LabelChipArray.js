@@ -5,10 +5,12 @@ import {
     Chip
 } from '@mui/material'
 
-const LabelChipArray = () => {
+const LabelChipArray = ({ labels }) => {
     return (
         <Box>
-
+            {labels.map(l => 
+                <Chip></Chip>
+            )}
         </Box>
     )
 }

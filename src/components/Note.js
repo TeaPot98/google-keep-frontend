@@ -21,6 +21,7 @@ import BackgroundMenu from './BackgroundMenu';
 import NoteContainer from './NoteContainer';
 import NoteForm from './NoteForm';
 import LabelMenu from './LabelMenu'
+import LabelChipArray from './LabelChipArray'
 
 const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
     const theme = useTheme()
@@ -38,7 +39,8 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
         title: '',
         content: '',
         pinned: false,
-        color: theme.palette.primary.main
+        color: theme.palette.primary.main,
+        labels: []
     })
 
     // Note form functions
@@ -51,12 +53,16 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
     const handleNoteFormClose = async () => {
         if (openNoteForm) {
             setOpenNoteForm(false)
-            await changeNote(editedNote)
+            await changeNote({
+                ...editedNote,
+                labels: editedNote.labels.map(l => l.id)
+            })
             setEditedNote({
                 title: '',
                 content: '',
                 pinned: false,
-                color: theme.palette.primary.main
+                color: theme.palette.primary.main,
+                labels: []
             })
         }
     }
@@ -195,6 +201,7 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                                 {note.content}
                             </Typography>
                         </Box>
+                        <LabelChipArray labels={note.labels}/>
                     </Box>
                     <Box
                         sx={{
@@ -279,6 +286,12 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                 newNote={false}
                 isOpen={openNoteForm}
                 onClickAway={() => {}}
+                labels={labels}
+                createLabel={createLabel}
+                closeLabelMenu={closeLabelMenu}
+                openLabelMenu={openLabelMenu}
+                labelAnchorEl={labelAnchorEl}
+                labelMenuOpen={labelMenuOpen}
                 // hidden={true}
             />
         </>

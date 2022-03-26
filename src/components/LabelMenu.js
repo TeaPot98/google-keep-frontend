@@ -23,7 +23,7 @@ const LabelMenu = ({ anchor, open, onClose, note, labels, changeNote, createLabe
     const [checkedLabels, setCheckedLabels] = useState(note.labels.map(l => {
         return l.id
     }))
-    console.log('The Note object recievied by LabelMenu >>> ', note)
+    // console.log('The Note object recievied by LabelMenu >>> ', note)
 
     const handleLabelSearch = (event) => {
         if (event.target.value !== null && event.target.value !== undefined && event.target.value !== '') {
@@ -37,11 +37,11 @@ const LabelMenu = ({ anchor, open, onClose, note, labels, changeNote, createLabe
 
     const createNewLabel = async () => {
         const addedLabel = await createLabel(labelSearchString)
-        setCheckedLabels([...note.labels, addedLabel])
+        setCheckedLabels([...checkedLabels, addedLabel.id])
         console.log(checkedLabels)
         changeNote({
             ...note,
-            labels: [...note.labels, addedLabel]
+            labels: [...note.labels.map(l => l.id), addedLabel.id]
         })
         console.log(addedLabel)
         setLabelSearchString('')
@@ -77,6 +77,9 @@ const LabelMenu = ({ anchor, open, onClose, note, labels, changeNote, createLabe
             anchorEl={anchor}
             open={open}
             onClose={handleClose}
+            sx={{
+                zIndex: 2002,
+            }}
         >
             <Box
                 sx={{

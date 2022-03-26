@@ -16,6 +16,7 @@ import { ArchiveOutlined } from '@mui/icons-material';
 import NoteContainer from './NoteContainer'
 import NoteButton from './NoteButton'
 import BackgroundMenu from './BackgroundMenu';
+import LabelMenu from './LabelMenu'
 
 const NoteForm = ({ 
   note, 
@@ -26,7 +27,12 @@ const NoteForm = ({
   newNote,
   onClickAway,
   isOpen,
-  hidden = false
+  createLabel,
+  labels,
+  openLabelMenu,
+  closeLabelMenu,
+  labelMenuOpen,
+  labelAnchorEl
 }) => {
   const [anchorNoteForm, setAnchorNoteForm] = useState(null)
   const open = Boolean(anchorNoteForm)
@@ -155,7 +161,7 @@ const NoteForm = ({
                     <InsertPhotoOutlinedIcon fontSize='small'/>
                 </NoteButton>
                 <NoteButton
-                    onClick={() => {}}
+                    onClick={openLabelMenu}
                     tooltip="Add label"
                 >
                     <LabelOutlinedIcon fontSize='small'/>
@@ -196,6 +202,15 @@ const NoteForm = ({
                 note={note}
                 onColorChange={changeNote}
                 handleEditNote={handleEditNote}
+            />
+            <LabelMenu
+                anchor={labelAnchorEl}
+                open={labelMenuOpen}
+                onClose={closeLabelMenu}
+                note={note}
+                labels={labels}
+                changeNote={changeNote}
+                createLabel={createLabel}
             />
         </NoteContainer>
       {/* </Grow> */}
