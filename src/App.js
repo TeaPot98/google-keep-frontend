@@ -116,7 +116,15 @@ const App = () => {
                         />
                         <Route 
                             path="/label/:labelName"
-                            element={<></>}
+                            element={
+                                <Notes 
+                                    notes={notes} 
+                                    labels={labels}
+                                    deleteNote={deleteNote}
+                                    changeNote={changeNote}
+                                    createLabel={createLabel}
+                                />
+                            }
                         />
                         <Route 
                             path="/archive"

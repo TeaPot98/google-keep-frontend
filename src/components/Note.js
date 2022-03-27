@@ -7,6 +7,7 @@ import {
     Fade,
     Grow,
 } from '@mui/material'
+
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
@@ -34,6 +35,14 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
     const [labelAnchorEl, setLabelAnchorEl] = useState(null)
     const labelMenuOpen = Boolean(labelAnchorEl)
 
+    // Background menu anchor
+    const [backgroundAnchorElF, setBackgroundAnchorElF] = useState(null)
+    const backgroundMenuOpenF = Boolean(backgroundAnchorElF)
+
+    // Label menu anchor
+    const [labelAnchorElF, setLabelAnchorElF] = useState(null)
+    const labelMenuOpenF = Boolean(labelAnchorElF)
+    
     const [openNoteForm, setOpenNoteForm] = useState(false)
     const [editedNote, setEditedNote] = useState({
         title: '',
@@ -83,6 +92,24 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
     }
     const closeLabelMenu = () => {
         setLabelAnchorEl(null)
+    }
+
+    // Background menu functions
+    const openBackgroundMenuF = (event) => {
+        event.stopPropagation()
+        setBackgroundAnchorElF(event.currentTarget)
+    }
+    const closeBackgroundMenuF = () => {
+        setBackgroundAnchorElF(null)
+    }
+
+    // Label menu functions
+    const openLabelMenuF = (event) => {
+        event.stopPropagation()
+        setLabelAnchorElF(event.currentTarget)
+    }
+    const closeLabelMenuF = () => {
+        setLabelAnchorElF(null)
     }
 
     const removeNote = async (event) => {
@@ -202,7 +229,10 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                                 {note.content}
                             </Typography>
                         </Box>
-                        <LabelChipArray labels={note.labels}/>
+                        <LabelChipArray 
+                            note={note}
+                            changeNote={changeNote}
+                        />
                     </Box>
                     <Box
                         sx={{
@@ -290,10 +320,10 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                 onClickAway={() => {}}
                 labels={labels}
                 createLabel={createLabel}
-                closeLabelMenu={closeLabelMenu}
-                openLabelMenu={openLabelMenu}
-                labelAnchorEl={labelAnchorEl}
-                labelMenuOpen={labelMenuOpen}
+                closeLabelMenu={closeLabelMenuF}
+                openLabelMenu={openLabelMenuF}
+                labelAnchorEl={labelAnchorElF}
+                labelMenuOpen={labelMenuOpenF}
                 // hidden={true}
             />
         </>

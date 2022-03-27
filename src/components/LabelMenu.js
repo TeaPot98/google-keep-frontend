@@ -23,7 +23,7 @@ const LabelMenu = ({ anchor, open, onClose, note, labels, changeNote, createLabe
     const [checkedLabels, setCheckedLabels] = useState(note.labels.map(l => {
         return l.id
     }))
-    console.log('The note passed to LabelMenu', note)
+    // console.log('The note passed to LabelMenu', note)
     // console.log('The Note object recievied by LabelMenu >>> ', note)
 
     const handleLabelSearch = (event) => {

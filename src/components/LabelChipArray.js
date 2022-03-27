@@ -2,19 +2,44 @@ import React from 'react'
 import { 
     Box,
     ListItem,
-    Chip
+    Chip,
+    Link
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
-const LabelChipArray = ({ labels }) => {
+
+const LabelChipArray = ({ note, changeNote }) => {
+    const navigate = useNavigate()
+
+    const removeLabel = (currentLabel) => {
+        changeNote({
+            ...note,
+            labels: note.labels.map(l => l.id !== currentLabel.id ? l.id : null)
+        })
+    }
+    
     return (
-        <Box>
-            {labels.map(label => 
+        <Box
+            sx={{
+                px: theme => theme.spacing(1)
+            }}
+        >
+            {note.labels.map(label => 
                 <Chip
+                    // component={Link}
+                    // to={`/label/${label.name}`}   
                     key={label.id}
                     size="small"
                     label={label.name}
-                    onClick={() => {}}
-                    onDelete={() => {}}
+                    sx={{
+                        ml: theme => theme.spacing(1),
+                        mt: theme => theme.spacing(0.5)
+                    }}
+                    onClick={(event) => {
+                        event.stopPropagation()
+                        navigate(`/label/${label.name}`)
+                    }}
+                    onDelete={() => removeLabel(label)}
                 />
             )}
         </Box>
