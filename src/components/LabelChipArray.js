@@ -14,10 +14,10 @@ const LabelChipArray = ({ note, changeNote }) => {
     const removeLabel = (currentLabel) => {
         changeNote({
             ...note,
-            labels: note.labels.map(l => l.id !== currentLabel.id ? l.id : null)
+            labels: note.labels.filter(l => l.id !== currentLabel.id)
         })
     }
-    
+    // console.log('The note object passed to ChipArray', note)
     return (
         <Box
             sx={{

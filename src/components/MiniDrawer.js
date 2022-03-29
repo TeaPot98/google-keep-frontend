@@ -1,6 +1,6 @@
-import React from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
-import { styled, useTheme } from '@mui/material/styles'
+import React, { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { styled } from '@mui/material/styles'
 import {
   List,
   ListItemButton,
@@ -14,6 +14,8 @@ import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+
+import EditLabels from './EditLabels'
 
 const drawerWidth = 300
 
@@ -64,17 +66,17 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   })
 )
 
-const DrawerButton = ({ open, text, linkUrl, children }) => {
+const DrawerButton = ({ open, text, linkUrl = null, children, onClick = null }) => {
   const location = useLocation().pathname
   // const location = "/home"
   const isActive = linkUrl === decodeURIComponent(location)
   // console.log('The linkUrl for DrawerButton >>> ', linkUrl)
   return (
     <ListItemButton
-      // onClick={onClick}
+      onClick={onClick}
       disableRipple={true}
-      component={Link}
-      to={linkUrl}
+      component={linkUrl ? Link : 'div'}
+      to={linkUrl ? linkUrl : null}
       sx={{
         minHeight: 48,
         justifyContent: open ? 'initial' : 'center',
@@ -113,7 +115,17 @@ const DrawerButton = ({ open, text, linkUrl, children }) => {
   )
 }
 
-const MiniDrawer = ({ open, labels, onMouseEnter }) => {
+const MiniDrawer = ({ open, labels, onMouseEnter, createLabel, removeLabel, editLabel }) => {
+  const [editLabelOpen, setEditLabelOpen] = useState(false)
+  
+  const handleEditLabelOpen = () => {
+    setEditLabelOpen(true)
+  }
+
+  const handleEditLabelClose = () => {
+    setEditLabelOpen(false)
+  }
+  
   return (
     // <ClickAwayListener onClickAway={clickAway}>
       <Drawer 
@@ -136,7 +148,7 @@ const MiniDrawer = ({ open, labels, onMouseEnter }) => {
               <LabelOutlinedIcon />
             </DrawerButton>
           )}
-          <DrawerButton open={open} text='Edit labels' linkUrl={''}>
+          <DrawerButton open={open} text='Edit labels' onClick={handleEditLabelOpen}>
             <EditOutlinedIcon />
           </DrawerButton>
           <DrawerButton open={open} text='Archive' linkUrl="/archive">
@@ -146,6 +158,14 @@ const MiniDrawer = ({ open, labels, onMouseEnter }) => {
             <DeleteOutlinedIcon />
           </DrawerButton>
         </List>
+        <EditLabels 
+          onClose={handleEditLabelClose}
+          open={editLabelOpen}
+          labels={labels}
+          createLabel={createLabel}
+          removeLabel={removeLabel}
+          editLabel={editLabel}
+        />
       </Drawer>
     // </ClickAwayListener>
   )

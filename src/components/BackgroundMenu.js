@@ -71,10 +71,12 @@ const BackgroundMenu = ({ open, onClose, anchor, onColorChange, note, handleEdit
     const changeColor = (newColor) => {
         handleEditNote({
             ...note,
+            // labels: note.labels.map(l => l.id),
             color: newColor
         })
         onColorChange({
             ...note,
+            labels: note.labels.map(l => l.id),
             color: newColor
         })
     }

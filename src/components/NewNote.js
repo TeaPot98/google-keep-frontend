@@ -7,23 +7,33 @@ import {
 import NoteForm from './NoteForm'
 import { useTheme } from '@emotion/react'
 
-const NewNote = ({ addNote, deleteNote }) => {
+const NewNote = ({ labels, addNote, deleteNote, createLabel }) => {
   const theme = useTheme()
+
+  // Label menu anchor
+  const [labelAnchorElF, setLabelAnchorElF] = useState(null)
+  const labelMenuOpenF = Boolean(labelAnchorElF)
   
   const [active, setActive] = useState(false)
   const [note, setNote] = useState({
     title: '',
     content: '',
     pinned: false,
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
+    labels: []
   })
 
-  const handleTitleChange = (event) => {
-    setNote({...note, title: event.target.value})
-  } 
+  // Label menu functions
+  const openLabelMenuF = (event) => {
+    event.stopPropagation()
+    setLabelAnchorElF(event.currentTarget)
+  }
+  const closeLabelMenuF = () => {
+    setLabelAnchorElF(null)
+  }
 
-  const handleContentChange = (event) => {
-    setNote({...note, content: event.target.value})
+  const handleEditNote = (updatedNote) => {
+    setNote(updatedNote)
   }
 
   const handleColorChange = (newNote) => {
@@ -40,7 +50,8 @@ const NewNote = ({ addNote, deleteNote }) => {
       title: '',
       content: '',
       color: theme.palette.primary.main,
-      pinned: false
+      pinned: false,
+      labels: []
     })
   }
 
@@ -60,15 +71,20 @@ const NewNote = ({ addNote, deleteNote }) => {
           }}
         >
               <NoteForm 
-                handleTitleChange={handleTitleChange}
-                handleContentChange={handleContentChange}
+                handleEditNote={handleEditNote}
                 note={note}
+                labels={labels}
                 deleteNote={deleteNote}
                 changeColor={handleColorChange}
                 onClose={closeNoteForm}
                 newNote={true}
                 onClickAway={closeNoteForm}
                 isOpen={true}
+                createLabel={createLabel}
+                closeLabelMenu={closeLabelMenuF}
+                openLabelMenu={openLabelMenuF}
+                labelAnchorEl={labelAnchorElF}
+                labelMenuOpen={labelMenuOpenF}
               />
         </Box> :
         <Paper 

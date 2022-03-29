@@ -6,15 +6,20 @@ import {
     Tooltip,
     Fade,
     Grow,
+    Checkbox
 } from '@mui/material'
 
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import RestoreFromTrashOutlinedIcon from '@mui/icons-material/RestoreFromTrashOutlined';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import PushPinIcon from '@mui/icons-material/PushPin';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { ArchiveOutlined } from '@mui/icons-material';
+import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined';
 import { useTheme } from '@emotion/react';
 
 import NoteButton from './NoteButton'
@@ -44,35 +49,20 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
     const labelMenuOpenF = Boolean(labelAnchorElF)
     
     const [openNoteForm, setOpenNoteForm] = useState(false)
-    const [editedNote, setEditedNote] = useState({
-        title: '',
-        content: '',
-        pinned: false,
-        color: theme.palette.primary.main,
-        labels: []
-    })
+    const [editedNote, setEditedNote] = useState(note)
 
     // Note form functions
     const handleNoteFormOpen = (event) => {
         if (!backgroundAnchorEl && !labelAnchorEl) {
+            // setEditedNote(note)
             setOpenNoteForm(true)
-            setEditedNote(note)
+            // console.log('The form is opened with note >>> ', editedNote)
         }
     }
     const handleNoteFormClose = async () => {
         if (openNoteForm) {
             setOpenNoteForm(false)
-            await changeNote({
-                ...editedNote,
-                labels: editedNote.labels.map(l => l.id)
-            })
-            setEditedNote({
-                title: '',
-                content: '',
-                pinned: false,
-                color: theme.palette.primary.main,
-                labels: []
-            })
+            await changeNote(editedNote)
         }
     }
     
@@ -125,25 +115,7 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
     // console.log('The note from Note', note)
     return (
         <>
-            <Badge
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left'
-                }}
-                overlap="rectangular"
-                badgeContent={
-                    !openNoteForm ?
-                    <Tooltip title="Select note">
-                        <CheckCircleIcon
-                            sx={{
-                                cursor: 'pointer',
-                                transition: 'auto 0.5s ease-in-ease-out'
-                            }}
-                            onClick={() => console.log('Clicked the check button')}
-                        />
-                    </Tooltip> :
-                    null
-                }
+            <Box
                 sx={{
                     m: 0,
                     p: 0,
@@ -151,11 +123,14 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                     // "& :hover": {
                     //     opacity: 0
                     // }
-                    "& .MuiBadge-badge, .noteButton": {
+                    "& .MuiBadge-badge, .noteButton, .pinButtonIcon": {
                         opacity: 0,
                         transition: 'opacity 0.218s ease-in-out, color 0.218s ease-in-out'
                     },
                     "&:hover .MuiBadge-badge": {
+                        opacity: 1
+                    },
+                    "&:hover .pinButtonIcon": {
                         opacity: 1
                     },
                     "&:hover .noteButton": {
@@ -175,7 +150,6 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                         backgroundColor: note.color,
                         borderColor: theme => note.color === '#fff' ? theme.palette.divider : 'transparent',
                         transition: 'all 0.218s ease-in-out',
-                        visibility: openNoteForm ? 'hidden' : 'default',
                         zIndex: 1,
                     }}
                 >
@@ -200,13 +174,30 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                             >
                                 {note.title}
                             </Typography>
-                            <NoteButton
-                                onClick={() => {}}
-                                tooltip="Pin note"
-                                size="normal"
-                            >
-                                <PushPinOutlinedIcon />
-                            </NoteButton>
+                            {note.deleted ?
+                                null :
+                                <Checkbox 
+                                    checked={note.pinned}
+                                    icon={
+                                        <PushPinOutlinedIcon 
+                                            className="pinButtonIcon"
+                                        />
+                                    }
+                                    checkedIcon={
+                                        <PushPinIcon 
+                                            className="pinButtonIcon"
+                                            color="action"
+                                        />
+                                    }
+                                    onChange={(event) => {
+                                        changeNote({
+                                            ...note,
+                                            pinned: event.target.checked
+                                        })
+                                    }}
+                                    onClick={(event) => {event.stopPropagation()}}
+                                />
+                            }
                         </Box>
                         <Box
                             sx={{
@@ -237,39 +228,79 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                     <Box
                         sx={{
                             display: 'flex',
-                            justifyContent: 'end'
+                            justifyContent: 'start'
                         }}
                     >
-                        <NoteButton
-                            onClick={openBackgroundMenu}
-                            tooltip="Background options"
-                        >
-                            <PaletteOutlinedIcon fontSize='small'/>
-                        </NoteButton>
-                        <NoteButton
-                            onClick={() => {}}
-                            tooltip="Add image"
-                        >
-                            <InsertPhotoOutlinedIcon fontSize='small'/>
-                        </NoteButton>
-                        <NoteButton
-                            onClick={openLabelMenu}
-                            tooltip="Add label"
-                        >
-                            <LabelOutlinedIcon fontSize='small'/>
-                        </NoteButton>
-                        <NoteButton
-                            onClick={() => {}}
-                            tooltip="Archive"
-                        >
-                            <ArchiveOutlined fontSize='small'/>
-                        </NoteButton>
-                        <NoteButton
-                            onClick={removeNote}
-                            tooltip="Delete note"
-                        >
-                            <DeleteOutlineOutlinedIcon fontSize='small'/>
-                        </NoteButton>
+                        {note.deleted ?
+                            <>
+                                <NoteButton
+                                    onClick={(event) => {
+                                        event.stopPropagation()
+                                        changeNote({
+                                            ...note,
+                                            deleted: false
+                                        })
+                                    }}
+                                    tooltip="Restore"
+                                >
+                                    <RestoreFromTrashOutlinedIcon fontSize='small'/>
+                                </NoteButton>
+                                <NoteButton
+                                    onClick={removeNote}
+                                    tooltip="Delete forever"
+                                >
+                                    <DeleteForeverOutlinedIcon fontSize='small'/>
+                                </NoteButton>
+                            </> :
+                            <>
+                                <NoteButton
+                                    onClick={openBackgroundMenu}
+                                    tooltip="Background options"
+                                >
+                                    <PaletteOutlinedIcon fontSize='small'/>
+                                </NoteButton>
+                                {/* <NoteButton
+                                    onClick={() => {}}
+                                    tooltip="Add image"
+                                >
+                                    <InsertPhotoOutlinedIcon fontSize='small'/>
+                                </NoteButton> */}
+                                <NoteButton
+                                    onClick={openLabelMenu}
+                                    tooltip="Add label"
+                                >
+                                    <LabelOutlinedIcon fontSize='small'/>
+                                </NoteButton>
+                                <NoteButton
+                                    onClick={(event) => {
+                                            event.stopPropagation()
+                                            changeNote({
+                                                ...note,
+                                                archived: !note.archived
+                                            })
+                                        }
+                                    }
+                                    tooltip={note.archived ? "Unarchive" : "Archive"}
+                                >
+                                    {note.archived ? 
+                                        <UnarchiveOutlinedIcon fontSize="small"/> :
+                                        <ArchiveOutlined fontSize='small'/>
+                                    }
+                                </NoteButton>
+                                <NoteButton
+                                    onClick={(event) => {
+                                        event.stopPropagation()
+                                        changeNote({
+                                            ...note,
+                                            deleted: true
+                                        })
+                                    }}
+                                    tooltip="Delete note"
+                                >
+                                    <DeleteOutlineOutlinedIcon fontSize='small'/>
+                                </NoteButton>
+                            </>
+                        }
                     </Box>
                     <BackgroundMenu 
                         open={backgroundMenuOpen}
@@ -287,9 +318,10 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                         labels={labels}
                         changeNote={changeNote}
                         createLabel={createLabel}
+                        // labelMenuLocation="Note"
                     />
                 </NoteContainer>
-            </Badge>
+            </Box>
             <Fade in={openNoteForm}>
                 <Box
                     onClick={handleNoteFormClose}

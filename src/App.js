@@ -4,8 +4,9 @@ import { ThemeProvider } from '@emotion/react'
 import { Box } from '@mui/system'
 import { Toolbar } from '@mui/material'
 import {
-    BrowserRouter as Router, 
-    Routes, Route, Link, useNavigate
+    Routes, 
+    Route, 
+    useLocation
 } from 'react-router-dom'
 
 import labelService from './services/labels'
@@ -20,6 +21,11 @@ const App = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const [labels, setLabels] = useState([])
     const [notes, setNotes] = useState([])
+    const [searchString, setSearchString] = useState('')
+    const [foundNotes, setFoundNotes] = useState([])
+
+    const location = useLocation()
+    // console.log('Current route >> ', location)
 
     useEffect(() => {
         console.log('Fetching labels...')
@@ -45,10 +51,7 @@ const App = () => {
 
     const changeNote = async (updatedNote) => {
         // console.log('Changing note started')
-        setNotes(notes.map(n => n.id === updatedNote.id ? {
-            ...updatedNote,
-            labels: labels.filter(l => updatedNote.labels.includes(l.id))
-        } : n))
+        setNotes(notes.map(n => n.id === updatedNote.id ? updatedNote : n))
         console.log('The note sent to update >>> ', updatedNote)
         // console.log('Updated notes list')
         const response = await noteService.update(updatedNote)
@@ -59,6 +62,42 @@ const App = () => {
         const addedLabel = await labelService.create(newLabel)
         setLabels([...labels, addedLabel])
         return addedLabel
+    }
+
+    const removeLabel = async (labelId) => {
+        setLabels(labels.filter(l => l.id !== labelId))
+        // setNotes(notes.map(n => {
+        //     let editedNote = {
+        //         ...n,
+        //         labels: n.labels.filter(l => l.id !== labelId)
+        //     }
+        //     console.log('EditedNote from removeLabel >>> ', editedNote)
+        //     return editedNote
+        // }))
+        notes.map(n => {
+            n.labels.map(l => {
+                if (l.id === labelId) {
+                    changeNote({
+                        ...n,
+                        labels: n.labels.filter(l => l.id !== labelId)
+                    })
+                }
+            })
+        })
+        const response = await labelService.remove(labelId)
+        console.log('Label successfuly removed >>> ', response)
+    }
+
+    const editLabel = async (updatedLabel) => {
+        setLabels(labels.map(l => l.id !== updatedLabel.id ? l : updatedLabel))
+        setNotes(notes.map(n => {
+            let editedNote = {
+                ...n,
+                labels: n.labels.map(l => l.id !== updatedLabel.id ? l : updatedLabel)
+            }
+            return editedNote
+        }))
+        const response = await labelService.update(updatedLabel)
     }
 
     const openDrawer = () => {
@@ -73,9 +112,21 @@ const App = () => {
         }
     }
 
+    const handleNoteSearch = (searchText) => {
+        setSearchString(searchText)
+        setFoundNotes(notes.filter(n => n.title.includes(searchString) || n.content.includes(searchString)))
+        console.log('Found notes >>> ', foundNotes)
+    }
+
+
+
     return (
         <ThemeProvider theme={light}>
-            <TopBar openDrawer={openDrawer} />
+            <TopBar 
+                openDrawer={openDrawer} 
+                searchString={searchString}
+                handleNoteSearch={handleNoteSearch}
+            />
             <Box 
                 sx={{ 
                     display: 'flex', 
@@ -83,7 +134,10 @@ const App = () => {
             >
                 <MiniDrawer 
                     open={drawerOpen} 
-                    labels={labels} 
+                    labels={labels}
+                    removeLabel={removeLabel}
+                    createLabel={createLabel}
+                    editLabel={editLabel}
                     // onMouseEnter={() => setDrawerOpen(true)}
                 />
                 <Box 
@@ -93,16 +147,21 @@ const App = () => {
                     onClick={onDrawerClickAway}
                 >
                     <Toolbar />
-                    <NewNote 
-                        addNote={addNote} 
-                        deleteNote={deleteNote}
-                    />
+                    {searchString === '' && location.pathname !== '/archive' && location.pathname !== '/trash' ?
+                        <NewNote 
+                            labels={labels}
+                            addNote={addNote} 
+                            deleteNote={deleteNote}
+                            createLabel={createLabel}
+                        /> :
+                        null
+                    }
                     <Routes>
                         <Route 
                             path="/home"
                             element={
                                 <Notes 
-                                    notes={notes} 
+                                    notes={searchString === '' ? notes.filter(n => !n.deleted && !n.archived) : foundNotes.filter(n => !n.deleted && !n.archived)} 
                                     labels={labels}
                                     deleteNote={deleteNote}
                                     changeNote={changeNote}
@@ -128,11 +187,27 @@ const App = () => {
                         />
                         <Route 
                             path="/archive"
-                            element={<></>}
+                            element={
+                                <Notes 
+                                    notes={notes.filter(n => n.archived && !n.deleted)} 
+                                    labels={labels}
+                                    deleteNote={deleteNote}
+                                    changeNote={changeNote}
+                                    createLabel={createLabel}
+                                />
+                            }
                         />
                         <Route 
                             path="/trash"
-                            element={<></>}
+                            element={
+                                <Notes 
+                                    notes={notes.filter(n => n.deleted)} 
+                                    labels={labels}
+                                    deleteNote={deleteNote}
+                                    changeNote={changeNote}
+                                    createLabel={createLabel}
+                                />
+                            }
                         />
                     </Routes>
                     {/* <Notes 

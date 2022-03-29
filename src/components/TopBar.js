@@ -59,7 +59,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     }
 }))
 
-const TopBar = ({ openDrawer }) => {
+const TopBar = ({ openDrawer, searchString, handleNoteSearch }) => {
     return (
         <Box>
             <AppBar 
@@ -97,35 +97,16 @@ const TopBar = ({ openDrawer }) => {
                         <StyledInputBase 
                             placeholder='Search...'
                             inputProps={{ 'aria-label': 'search' }}
+                            onChange={(event) => handleNoteSearch(event.target.value)}
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: 'flex' }} >
-                        <IconButton
-                            size='large'
-                        >
-                            <SearchIcon />
-                        </IconButton>
-                        <IconButton
+                        {/* <IconButton
                             size='large'
                         >
                             <RefreshIcon />
-                        </IconButton>
-                        <IconButton
-                            size='large'
-                        >
-                            <SettingsOutlinedIcon />
-                        </IconButton>
-                        <IconButton
-                            size='large'
-                            edge='end'
-                            aria-label='account of current user'
-                            // aria-controls={menuId}
-                            // aria-haspopup='true'
-                            // onClick={handleProfileMenuOpen}
-                        >
-                            <AccountCircle />
-                        </IconButton>
+                        </IconButton> */}
                     </Box>
                 </Toolbar>
             </AppBar>

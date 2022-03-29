@@ -25,26 +25,26 @@ const create = async (newLabel) => {
     return response.data;
 };
 
-const update = async (noteObject) => {
+const update = async (labelObject) => {
     const config = {
         headers: { Authorization: token },
 };
 
     const response = await axios.put(
-        baseUrl + `/${noteObject.id}`,
-        noteObject,
+        baseUrl + `/${labelObject.id}`,
+        labelObject,
         config
     );
     return response.data;
 };
 
-const remove = async (noteId) => {
-    console.log("The id of removed item", noteId);
+const remove = async (labelId) => {
+    console.log("The id of removed item", labelId);
     const config = {
         headers: { Authorization: token },
     };
 
-    const response = await axios.delete(baseUrl + `/${noteId}`, config);
+    const response = await axios.delete(baseUrl + `/${labelId}`, config);
     return response.data;
 };
 

@@ -16,14 +16,24 @@ import AddIcon from '@mui/icons-material/Add';
 import { useTheme } from '@emotion/react';
 
 
-const LabelMenu = ({ anchor, open, onClose, note, labels, changeNote, createLabel }) => {
+const LabelMenu = ({ 
+    anchor, 
+    open, 
+    onClose, 
+    note, 
+    labels, 
+    changeNote, 
+    createLabel,
+    // labelMenuLocation
+}) => {
     // const theme = useTheme()
     const [labelSearchString, setLabelSearchString] = useState('')
     const [labelsToShow, setLabelsToShow] = useState(labels)
     const [checkedLabels, setCheckedLabels] = useState(note.labels.map(l => {
         return l.id
     }))
-    // console.log('The note passed to LabelMenu', note)
+    // console.log('The note passed to LabelMenu from ', labelMenuLocation, note)
+    // console.log('Checked labels at start >>> ', labelMenuLocation, checkedLabels)
     // console.log('The Note object recievied by LabelMenu >>> ', note)
 
     const handleLabelSearch = (event) => {
@@ -42,7 +52,7 @@ const LabelMenu = ({ anchor, open, onClose, note, labels, changeNote, createLabe
         console.log(checkedLabels)
         changeNote({
             ...note,
-            labels: [...note.labels.map(l => l.id), addedLabel.id]
+            labels: [...note.labels, addedLabel]
         })
         console.log(addedLabel)
         setLabelSearchString('')
@@ -56,14 +66,14 @@ const LabelMenu = ({ anchor, open, onClose, note, labels, changeNote, createLabe
             console.log(checkedLabels)
             changeNote({
                 ...note,
-                labels: note.labels.map(l => l.id !== currentLabel.id ? l.id : null)
+                labels: note.labels.filter(l => l.id !== currentLabel.id)
             })
         } else {
             setCheckedLabels([...checkedLabels, currentLabel.id])
             console.log(checkedLabels)
             changeNote({
                 ...note,
-                labels: [...note.labels.map(l => l.id), currentLabel.id]
+                labels: [...note.labels, currentLabel]
             })
         }
     }

@@ -5,18 +5,22 @@ import {
   Typography,
   ClickAwayListener,
   Grow,
+  Checkbox,
+
 } from '@mui/material'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import PushPinIcon from '@mui/icons-material/PushPin';
 import { ArchiveOutlined } from '@mui/icons-material';
 
 import NoteContainer from './NoteContainer'
 import NoteButton from './NoteButton'
 import BackgroundMenu from './BackgroundMenu';
 import LabelMenu from './LabelMenu'
+import LabelChipArray from './LabelChipArray'
 
 const NoteForm = ({ 
   note, 
@@ -48,8 +52,13 @@ const NoteForm = ({
   const removeNote = async () => {
     await deleteNote(note.id)
   }
+
+  const updateNote = (updNote) => {
+    handleEditNote(updNote)
+    changeNote(updNote)
+  }
   
-  
+  // console.log('The note object passed to NoteForm >>> ', note)
   return (
     <ClickAwayListener onClickAway={onClickAway}>
       {/* <Grow 
@@ -105,13 +114,26 @@ const NoteForm = ({
                       })}
                       value={note.title}
                     />
-                    <NoteButton
-                        onClick={() => {}}
-                        tooltip="Pin note"
-                        size="normal"
-                    >
-                        <PushPinOutlinedIcon />
-                    </NoteButton>
+                    <Checkbox 
+                        checked={note.pinned}
+                        icon={
+                            <PushPinOutlinedIcon 
+                                className="pinButtonIcon"
+                            />
+                        }
+                        checkedIcon={
+                            <PushPinIcon 
+                                color="action"
+                            />
+                        }
+                        onChange={(event) => {
+                          updateNote({
+                            ...note,
+                            pinned: event.target.checked
+                          })
+                        }}
+                        onClick={(event) => {event.stopPropagation()}}
+                    />
                 </Box>
                 <Box
                     sx={{
@@ -137,6 +159,7 @@ const NoteForm = ({
                       })}
                       value={note.content}
                     />
+                    <LabelChipArray note={note} changeNote={updateNote} />
                 </Box>
             </Box>
             <Box
@@ -154,12 +177,12 @@ const NoteForm = ({
                 >
                     <PaletteOutlinedIcon fontSize='small'/>
                 </NoteButton>
-                <NoteButton
+                {/* <NoteButton
                     onClick={() => {}}
                     tooltip="Add image"
                 >
                     <InsertPhotoOutlinedIcon fontSize='small'/>
-                </NoteButton>
+                </NoteButton> */}
                 <NoteButton
                     onClick={openLabelMenu}
                     tooltip="Add label"
@@ -209,8 +232,9 @@ const NoteForm = ({
                 onClose={closeLabelMenu}
                 note={note}
                 labels={labels}
-                changeNote={changeNote}
+                changeNote={handleEditNote}
                 createLabel={createLabel}
+                // labelMenuLocation="NoteForm"
             />
         </NoteContainer>
       {/* </Grow> */}
