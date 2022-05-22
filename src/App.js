@@ -9,8 +9,10 @@ import {
     useLocation
 } from 'react-router-dom'
 
+import { useSelector, useDispatch } from 'react-redux'
 import labelService from './services/labels'
-import noteService from './services/notes'
+import { fetchNotes, createNote, removeNote, selectNotes, editNote } from './reducers/noteSlice'
+import { selectLabels, fetchLabels, createLabel, removeLabel, editLabel } from './reducers/labelSlice'
 
 import TopBar from './components/TopBar'
 import MiniDrawer from './components/MiniDrawer'
@@ -18,54 +20,44 @@ import Notes from './components/Notes'
 import NewNote from './components/NewNote'
 
 const App = () => {
+    const dispatch = useDispatch()
+    const notes = useSelector(selectNotes)
     const [drawerOpen, setDrawerOpen] = useState(false)
-    const [labels, setLabels] = useState([])
-    const [notes, setNotes] = useState([])
+    const labels = useSelector(selectLabels)
     const [searchString, setSearchString] = useState('')
     const [foundNotes, setFoundNotes] = useState([])
 
     const location = useLocation()
-    // console.log('Current route >> ', location)
 
     useEffect(() => {
         console.log('Fetching labels...')
-        labelService.getAll().then(response => setLabels(response))
+        dispatch(fetchLabels())
     }, [])
 
     useEffect(() => {
         console.log('Fetching notes...')
-        noteService.getAll().then(response => setNotes(response))
+        dispatch(fetchNotes())
     }, [])
 
     const addNote = async (newNote) => {
-        const addedNote = await noteService.create(newNote)
-        setNotes([...notes, addedNote])
-        console.log('New note is >>> ', addedNote)
+        dispatch(createNote(newNote))
     }
 
     const deleteNote = async (noteId) => {
-        setNotes(notes.filter(n => n.id !== noteId))
-        const response = await noteService.remove(noteId)
-        console.log('The note successfuly removed >>> ', response)
+        dispatch(removeNote(noteId))
+        console.log('The note successfuly removed !')
     }
 
     const changeNote = async (updatedNote) => {
-        // console.log('Changing note started')
-        setNotes(notes.map(n => n.id === updatedNote.id ? updatedNote : n))
-        console.log('The note sent to update >>> ', updatedNote)
-        // console.log('Updated notes list')
-        const response = await noteService.update(updatedNote)
-        // console.log('Note updated >>> ', response)
+        dispatch(editNote(updatedNote))
     }
 
-    const createLabel = async (newLabel) => {
-        const addedLabel = await labelService.create(newLabel)
-        setLabels([...labels, addedLabel])
-        return addedLabel
+    const createLabel = (newLabel) => {
+        dispatch(createLabel(newLabel))
     }
 
     const removeLabel = async (labelId) => {
-        setLabels(labels.filter(l => l.id !== labelId))
+        dispatch(removeLabel(labelId))
         // setNotes(notes.map(n => {
         //     let editedNote = {
         //         ...n,
@@ -89,15 +81,14 @@ const App = () => {
     }
 
     const editLabel = async (updatedLabel) => {
-        setLabels(labels.map(l => l.id !== updatedLabel.id ? l : updatedLabel))
-        setNotes(notes.map(n => {
-            let editedNote = {
-                ...n,
-                labels: n.labels.map(l => l.id !== updatedLabel.id ? l : updatedLabel)
-            }
-            return editedNote
-        }))
-        const response = await labelService.update(updatedLabel)
+        dispatch(editLabel(updatedLabel))
+        // setNotes(notes.map(n => {
+        //     let editedNote = {
+        //         ...n,
+        //         labels: n.labels.map(l => l.id !== updatedLabel.id ? l : updatedLabel)
+        //     }
+        //     return editedNote
+        // }))
     }
 
     const openDrawer = () => {
@@ -150,8 +141,6 @@ const App = () => {
                     {searchString === '' && location.pathname !== '/archive' && location.pathname !== '/trash' ?
                         <NewNote 
                             labels={labels}
-                            addNote={addNote} 
-                            deleteNote={deleteNote}
                             createLabel={createLabel}
                         /> :
                         null
@@ -163,8 +152,6 @@ const App = () => {
                                 <Notes 
                                     notes={searchString === '' ? notes.filter(n => !n.deleted && !n.archived) : foundNotes.filter(n => !n.deleted && !n.archived)} 
                                     labels={labels}
-                                    deleteNote={deleteNote}
-                                    changeNote={changeNote}
                                     createLabel={createLabel}
                                 />
                             }
@@ -179,8 +166,6 @@ const App = () => {
                                 <Notes 
                                     notes={notes} 
                                     labels={labels}
-                                    deleteNote={deleteNote}
-                                    changeNote={changeNote}
                                     createLabel={createLabel}
                                 />
                             }
@@ -191,8 +176,6 @@ const App = () => {
                                 <Notes 
                                     notes={notes.filter(n => n.archived && !n.deleted)} 
                                     labels={labels}
-                                    deleteNote={deleteNote}
-                                    changeNote={changeNote}
                                     createLabel={createLabel}
                                 />
                             }
@@ -203,8 +186,6 @@ const App = () => {
                                 <Notes 
                                     notes={notes.filter(n => n.deleted)} 
                                     labels={labels}
-                                    deleteNote={deleteNote}
-                                    changeNote={changeNote}
                                     createLabel={createLabel}
                                 />
                             }

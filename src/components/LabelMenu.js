@@ -12,8 +12,11 @@ import {
     ListItemText,
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
-import AddIcon from '@mui/icons-material/Add';
-import { useTheme } from '@emotion/react';
+import AddIcon from '@mui/icons-material/Add'
+import { useTheme } from '@emotion/react'
+
+import { useDispatch } from 'react-redux'
+import { editNote } from '../reducers/noteSlice'
 
 
 const LabelMenu = ({ 
@@ -26,7 +29,7 @@ const LabelMenu = ({
     createLabel,
     // labelMenuLocation
 }) => {
-    // const theme = useTheme()
+    const dispatch = useDispatch()
     const [labelSearchString, setLabelSearchString] = useState('')
     const [labelsToShow, setLabelsToShow] = useState(labels)
     const [checkedLabels, setCheckedLabels] = useState(note.labels.map(l => {
@@ -50,10 +53,10 @@ const LabelMenu = ({
         const addedLabel = await createLabel(labelSearchString)
         setCheckedLabels([...checkedLabels, addedLabel.id])
         console.log(checkedLabels)
-        changeNote({
+        dispatch(editNote({
             ...note,
             labels: [...note.labels, addedLabel]
-        })
+        }))
         console.log(addedLabel)
         setLabelSearchString('')
         setLabelsToShow([...labels, addedLabel])
@@ -64,17 +67,17 @@ const LabelMenu = ({
         if (labelChecked) {
             setCheckedLabels(checkedLabels.filter(l => l !== currentLabel.id))
             console.log(checkedLabels)
-            changeNote({
+            dispatch(editNote({
                 ...note,
                 labels: note.labels.filter(l => l.id !== currentLabel.id)
-            })
+            }))
         } else {
             setCheckedLabels([...checkedLabels, currentLabel.id])
             console.log(checkedLabels)
-            changeNote({
+            dispatch(editNote({
                 ...note,
                 labels: [...note.labels, currentLabel]
-            })
+            }))
         }
     }
 

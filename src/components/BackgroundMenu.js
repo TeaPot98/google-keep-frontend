@@ -1,8 +1,11 @@
 import React from 'react'
 import { IconButton, Popover, Badge } from '@mui/material'
-import FormatColorResetOutlinedIcon from '@mui/icons-material/FormatColorResetOutlined';
-import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import { useTheme } from '@emotion/react';
+import FormatColorResetOutlinedIcon from '@mui/icons-material/FormatColorResetOutlined'
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined'
+import { useTheme } from '@emotion/react'
+
+import { useDispatch } from 'react-redux'
+import { editNote } from '../reducers/noteSlice'
 
 const colors = ['#fff', '#f28b82', '#fbbc04', '#fff475', '#ccff90', '#a7ffeb', '#cbf0f8', '#aecbfa', '#d7aefb', '#fdcfe8', '#e6c9a8', '#e8eaed']
 
@@ -66,7 +69,8 @@ const ColorButton = ({ color, onClick, note }) => {
     )
 }
 
-const BackgroundMenu = ({ open, onClose, anchor, onColorChange, note, handleEditNote = (c) => {} }) => {
+const BackgroundMenu = ({ open, onClose, anchor, note, handleEditNote = (c) => {} }) => {
+    const dispatch = useDispatch()
     // console.log()
     const changeColor = (newColor) => {
         handleEditNote({
@@ -74,11 +78,11 @@ const BackgroundMenu = ({ open, onClose, anchor, onColorChange, note, handleEdit
             // labels: note.labels.map(l => l.id),
             color: newColor
         })
-        onColorChange({
+        dispatch(editNote({
             ...note,
-            labels: note.labels.map(l => l.id),
+            // labels: note.labels.map(l => l.id),
             color: newColor
-        })
+        }))
     }
 
     return (

@@ -2,35 +2,33 @@ import React, { useState } from 'react'
 import {
     Box,
     Typography,
-    Badge,
-    Tooltip,
-    Fade,
-    Grow,
     Checkbox
 } from '@mui/material'
 
-import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
-import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
-import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import RestoreFromTrashOutlinedIcon from '@mui/icons-material/RestoreFromTrashOutlined';
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
-import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
-import PushPinIcon from '@mui/icons-material/PushPin';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { ArchiveOutlined } from '@mui/icons-material';
-import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined';
-import { useTheme } from '@emotion/react';
+import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
+import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined'
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import RestoreFromTrashOutlinedIcon from '@mui/icons-material/RestoreFromTrashOutlined'
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined'
+import PushPinIcon from '@mui/icons-material/PushPin'
+import { ArchiveOutlined } from '@mui/icons-material'
+import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined'
+import { useTheme } from '@emotion/react'
+
+import { useDispatch } from 'react-redux'
+import { editNote } from '../reducers/noteSlice'
 
 import NoteButton from './NoteButton'
-import BackgroundMenu from './BackgroundMenu';
-import NoteContainer from './NoteContainer';
-import NoteForm from './NoteForm';
+import BackgroundMenu from './BackgroundMenu'
+import NoteContainer from './NoteContainer'
+import NoteForm from './NoteForm'
 import LabelMenu from './LabelMenu'
 import LabelChipArray from './LabelChipArray'
 
-const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
+const Note = ({ note, labels, deleteNote, createLabel }) => {
     const theme = useTheme()
+    const dispatch = useDispatch()
 
     // Background menu anchor
     const [backgroundAnchorEl, setBackgroundAnchorEl] = useState(null)
@@ -59,10 +57,11 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
             // console.log('The form is opened with note >>> ', editedNote)
         }
     }
+
     const handleNoteFormClose = async () => {
         if (openNoteForm) {
             setOpenNoteForm(false)
-            await changeNote(editedNote)
+            dispatch(editNote(editedNote))
         }
     }
     
@@ -112,46 +111,52 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
         setEditedNote(updatedNote)
     }
 
+    const styles = {
+        wrapper: {
+            m: 0,
+            p: 0,
+            display: 'inline',
+            // "& :hover": {
+            //     opacity: 0
+            // }
+            "& .MuiBadge-badge, .noteButton, .pinButtonIcon": {
+                opacity: 0,
+                transition: 'opacity 0.218s ease-in-out, color 0.218s ease-in-out'
+            },
+            "&:hover .MuiBadge-badge": {
+                opacity: 1
+            },
+            "&:hover .pinButtonIcon": {
+                opacity: 1
+            },
+            "&:hover .noteButton": {
+                opacity: 1
+            },
+            "&:hover .noteContainer": {
+                boxShadow: `0px 1px 3px ${theme.palette.text.hint}`,
+                // boxShadow: '0px 1px 3px gray'
+            }
+        },
+        container: {
+            backgroundColor: note.color,
+            borderColor: note.color === '#fff' ? theme.palette.divider : 'transparent',
+            transition: 'box-shadow 0.118s ease-in-out',
+            zIndex: 1,
+        }
+    }
+
     // console.log('The note from Note', note)
     return (
         <>
             <Box
-                sx={{
-                    m: 0,
-                    p: 0,
-                    display: 'inline',
-                    // "& :hover": {
-                    //     opacity: 0
-                    // }
-                    "& .MuiBadge-badge, .noteButton, .pinButtonIcon": {
-                        opacity: 0,
-                        transition: 'opacity 0.218s ease-in-out, color 0.218s ease-in-out'
-                    },
-                    "&:hover .MuiBadge-badge": {
-                        opacity: 1
-                    },
-                    "&:hover .pinButtonIcon": {
-                        opacity: 1
-                    },
-                    "&:hover .noteButton": {
-                        opacity: 1
-                    },
-                    "&:hover .noteContainer": {
-                        boxShadow: theme => `0px 1px 3px ${theme.palette.text.hint}`
-                    }
-                }}
+                sx={styles.wrapper}
             >
                 <NoteContainer 
                     elevation={0} 
                     variant="outlined"
                     className="noteContainer"
                     onClick={handleNoteFormOpen}
-                    sx={{
-                        backgroundColor: note.color,
-                        borderColor: theme => note.color === '#fff' ? theme.palette.divider : 'transparent',
-                        transition: 'all 0.218s ease-in-out',
-                        zIndex: 1,
-                    }}
+                    sx={styles.container}
                 >
                     <Box>
                         <Box
@@ -190,10 +195,10 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                                         />
                                     }
                                     onChange={(event) => {
-                                        changeNote({
+                                        dispatch(editNote({
                                             ...note,
                                             pinned: event.target.checked
-                                        })
+                                        }))
                                     }}
                                     onClick={(event) => {event.stopPropagation()}}
                                 />
@@ -222,7 +227,6 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                         </Box>
                         <LabelChipArray 
                             note={note}
-                            changeNote={changeNote}
                         />
                     </Box>
                     <Box
@@ -236,10 +240,10 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                                 <NoteButton
                                     onClick={(event) => {
                                         event.stopPropagation()
-                                        changeNote({
+                                        dispatch(editNote({
                                             ...note,
                                             deleted: false
-                                        })
+                                        }))
                                     }}
                                     tooltip="Restore"
                                 >
@@ -274,10 +278,10 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                                 <NoteButton
                                     onClick={(event) => {
                                             event.stopPropagation()
-                                            changeNote({
+                                            dispatch(editNote({
                                                 ...note,
                                                 archived: !note.archived
-                                            })
+                                            }))
                                         }
                                     }
                                     tooltip={note.archived ? "Unarchive" : "Archive"}
@@ -290,10 +294,10 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                                 <NoteButton
                                     onClick={(event) => {
                                         event.stopPropagation()
-                                        changeNote({
+                                        dispatch(editNote({
                                             ...note,
                                             deleted: true
-                                        })
+                                        }))
                                     }}
                                     tooltip="Delete note"
                                 >
@@ -307,7 +311,7 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                         onClose={closeBackgroundMenu}
                         anchor={backgroundAnchorEl}
                         note={note}
-                        onColorChange={changeNote}
+                        handleEditNote={handleEditNote}
                     />
                     {/* {console.log('Note sent to LabelMenu', note)} */}
                     <LabelMenu
@@ -316,40 +320,19 @@ const Note = ({ note, labels, deleteNote, changeNote, createLabel }) => {
                         onClose={closeLabelMenu}
                         note={note}
                         labels={labels}
-                        changeNote={changeNote}
                         createLabel={createLabel}
+                        handleEditNote={handleEditNote}
                         // labelMenuLocation="Note"
                     />
                 </NoteContainer>
             </Box>
-            <Fade in={openNoteForm}>
-                <Box
-                    onClick={handleNoteFormClose}
-                    sx={{
-                        backgroundColor: theme => theme.palette.text.secondary,
-                        // display: openNoteForm ? 'block' : 'none',
-                        opacity: 0.7,
-                        zIndex: 2000,
-                        p: 0,
-                        m: 0,
-                        top: 0,
-                        left: 0,
-                        position: 'fixed',
-                        height: '100vh',
-                        width: '100vw'
-                    }}
-                >
-                </Box>
-            </Fade>
             <NoteForm 
                 handleEditNote={handleEditNote}
                 note={editedNote}
                 deleteNote={deleteNote}
-                changeNote={changeNote}
                 onClose={handleNoteFormClose}
                 newNote={false}
                 isOpen={openNoteForm}
-                onClickAway={() => {}}
                 labels={labels}
                 createLabel={createLabel}
                 closeLabelMenu={closeLabelMenuF}

@@ -1,21 +1,22 @@
 import React from 'react'
 import { 
     Box,
-    ListItem,
     Chip,
-    Link
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { editNote } from '../reducers/noteSlice'
 
 
-const LabelChipArray = ({ note, changeNote }) => {
+const LabelChipArray = ({ note }) => {
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const removeLabel = (currentLabel) => {
-        changeNote({
+        dispatch(editNote({
             ...note,
             labels: note.labels.filter(l => l.id !== currentLabel.id)
-        })
+        }))
     }
     // console.log('The note object passed to ChipArray', note)
     return (

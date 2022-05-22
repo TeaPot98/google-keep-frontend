@@ -9,7 +9,7 @@ import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 
 import Note from './Note'
 
-const Notes = ({ notes, labels, deleteNote, changeNote, createLabel }) => {
+const Notes = ({ notes, labels, createLabel }) => {
     const { labelName } = useParams()
     // console.log('The param from Router (labelName) >>>', labelName)
     let notesToShow = [...notes]
@@ -68,8 +68,6 @@ const Notes = ({ notes, labels, deleteNote, changeNote, createLabel }) => {
                                     key={n.id}
                                     note={n}
                                     labels={labels}
-                                    deleteNote={deleteNote}
-                                    changeNote={changeNote}
                                     createLabel={createLabel}
                                 />
                             )}
@@ -105,8 +103,6 @@ const Notes = ({ notes, labels, deleteNote, changeNote, createLabel }) => {
                                 key={n.id}
                                 note={n}
                                 labels={labels}
-                                deleteNote={deleteNote}
-                                changeNote={changeNote}
                                 createLabel={createLabel}
                             />
                         )}

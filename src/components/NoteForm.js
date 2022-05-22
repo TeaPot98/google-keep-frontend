@@ -6,7 +6,7 @@ import {
   ClickAwayListener,
   Grow,
   Checkbox,
-
+  Dialog,
 } from '@mui/material'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
@@ -29,7 +29,6 @@ const NoteForm = ({
   changeNote, 
   onClose,
   newNote,
-  onClickAway,
   isOpen,
   createLabel,
   labels,
@@ -60,11 +59,12 @@ const NoteForm = ({
   
   // console.log('The note object passed to NoteForm >>> ', note)
   return (
-    <ClickAwayListener onClickAway={onClickAway}>
-      {/* <Grow 
-        in={isOpen}
-        {...(isOpen  && newNote ? {timeout: 0} : {})}
-      > */}
+    // <ClickAwayListener onClickAway={onClickAway}>
+      // {/* <Grow 
+      //   in={isOpen}
+      //   {...(isOpen  && newNote ? {timeout: 0} : {})}
+      // > */}
+      <Dialog onClose={onClose} open={isOpen}>
           <NoteContainer 
             elevation={4} 
             // variant="outlined"
@@ -159,7 +159,7 @@ const NoteForm = ({
                       })}
                       value={note.content}
                     />
-                    <LabelChipArray note={note} changeNote={updateNote} />
+                    <LabelChipArray note={note} />
                 </Box>
             </Box>
             <Box
@@ -237,8 +237,9 @@ const NoteForm = ({
                 // labelMenuLocation="NoteForm"
             />
         </NoteContainer>
-      {/* </Grow> */}
-    </ClickAwayListener>
+      </Dialog>
+      // {/* </Grow> */}
+    // {/* </ClickAwayListener> */}
   )
 }
 
