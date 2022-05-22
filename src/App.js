@@ -53,6 +53,7 @@ const App = () => {
     }
 
     const createLabel = (newLabel) => {
+        console.log('Creating label from App')
         dispatch(createLabel(newLabel))
     }
 

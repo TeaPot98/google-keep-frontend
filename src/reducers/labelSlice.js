@@ -40,6 +40,7 @@ export const createLabel = newLabel => async dispatch => {
   try {
     const response = await labelService.create(newLabel)
     dispatch(add(response))
+    return response
   } catch (error) {
     console.log(error)
   }

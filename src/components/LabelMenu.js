@@ -15,8 +15,9 @@ import SearchIcon from '@mui/icons-material/Search'
 import AddIcon from '@mui/icons-material/Add'
 import { useTheme } from '@emotion/react'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { editNote } from '../reducers/noteSlice'
+import { createLabel, selectLabels } from '../reducers/labelSlice'
 
 
 const LabelMenu = ({ 
@@ -24,20 +25,12 @@ const LabelMenu = ({
     open, 
     onClose, 
     note, 
-    labels, 
-    changeNote, 
-    createLabel,
     // labelMenuLocation
 }) => {
     const dispatch = useDispatch()
+    const labels = useSelector(selectLabels)
     const [labelSearchString, setLabelSearchString] = useState('')
     const [labelsToShow, setLabelsToShow] = useState(labels)
-    const [checkedLabels, setCheckedLabels] = useState(note.labels.map(l => {
-        return l.id
-    }))
-    // console.log('The note passed to LabelMenu from ', labelMenuLocation, note)
-    // console.log('Checked labels at start >>> ', labelMenuLocation, checkedLabels)
-    // console.log('The Note object recievied by LabelMenu >>> ', note)
 
     const handleLabelSearch = (event) => {
         if (event.target.value !== null && event.target.value !== undefined && event.target.value !== '') {
@@ -50,9 +43,7 @@ const LabelMenu = ({
     }
 
     const createNewLabel = async () => {
-        const addedLabel = await createLabel(labelSearchString)
-        setCheckedLabels([...checkedLabels, addedLabel.id])
-        console.log(checkedLabels)
+        const addedLabel = await dispatch(createLabel(labelSearchString))
         dispatch(editNote({
             ...note,
             labels: [...note.labels, addedLabel]
@@ -63,18 +54,14 @@ const LabelMenu = ({
     }
 
     const addLabel = (event, currentLabel) => {
-        const labelChecked = checkedLabels.includes(currentLabel.id)
+        const labelChecked = note.labels.map(l => l.id).includes(currentLabel.id)
         if (labelChecked) {
-            setCheckedLabels(checkedLabels.filter(l => l !== currentLabel.id))
-            console.log(checkedLabels)
-            dispatch(editNote({
+            return dispatch(editNote({
                 ...note,
                 labels: note.labels.filter(l => l.id !== currentLabel.id)
             }))
         } else {
-            setCheckedLabels([...checkedLabels, currentLabel.id])
-            console.log(checkedLabels)
-            dispatch(editNote({
+            return dispatch(editNote({
                 ...note,
                 labels: [...note.labels, currentLabel]
             }))
@@ -150,7 +137,7 @@ const LabelMenu = ({
                                 control={
                                     <Checkbox
                                         size="small" 
-                                        checked={checkedLabels.includes(l.id)}
+                                        checked={note.labels.map(l => l.id).includes(l.id)}
                                         onChange={(event) => addLabel(event, l)}
                                         sx={{
                                             color: theme => theme.palette.text.secondary,

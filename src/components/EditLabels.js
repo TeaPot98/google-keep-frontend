@@ -12,15 +12,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 
+import { selectLabels, createLabel, removeLabel, editLabel } from '../reducers/labelSlice'
+import { selectNotes, editNote } from '../reducers/noteSlice'
+import { useDispatch, useSelector } from 'react-redux'
+
 const EditLabels = ({ 
     onClose, 
     open, 
-    labels,
-    createLabel,
-    editLabel,
-    removeLabel
 }) => {
     const [newLabelField, setNewLabelField] = useState('')
+    const dispatch = useDispatch()
+    const labels = useSelector(selectLabels)
 
     return (
         <Dialog onClose={onClose} open={open}>
@@ -58,7 +60,7 @@ const EditLabels = ({
                 <Tooltip title="Create label">
                     <IconButton
                         onClick={() => {
-                            createLabel(newLabelField)
+                            dispatch(createLabel(newLabelField))
                             setNewLabelField('')
                         }}
                     >
@@ -81,15 +83,31 @@ const EditLabels = ({
     )
 }
 
-const EditLabelItem = ({ label, createLabel, removeLabel, editLabel }) => {
+const EditLabelItem = ({ label, removeLabel, editLabel }) => {
     const [value, setValue] = useState(label.name)
+    const dispatch = useDispatch()
+    const notes = useSelector(selectNotes)
+
+    const deleteLabel = () => {
+        notes.map(n => {
+            n.labels.map(l => {
+                if (l.id === label.id) {
+                    dispatch(editNote({
+                        ...n,
+                        labels: n.labels.filter(l => l.id !== label.id)
+                    }))
+                }
+            })
+        })
+        dispatch(removeLabel(label.id))
+    }
 
     return (
         <ListItem
             dense={true}
         >
             <Tooltip title="Delete label">
-                <IconButton onClick={() => removeLabel(label.id)}>
+                <IconButton onClick={deleteLabel}>
                     <DeleteIcon fontSize="small" /> 
                 </IconButton>
             </Tooltip>
@@ -110,10 +128,10 @@ const EditLabelItem = ({ label, createLabel, removeLabel, editLabel }) => {
             />
             <Tooltip title="Rename label">
                 <IconButton
-                    onClick={() => editLabel({
+                    onClick={() => dispatch(editLabel({
                         ...label,
                         name: value
-                    })}
+                    }))}
                 >
                     <CheckIcon fontSize="small"/>
                 </IconButton>

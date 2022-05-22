@@ -18,6 +18,7 @@ export const noteSlice = createSlice({
     },
     edit: (state, action) => {
       state.notes = state.notes.map(n => n.id === action.payload.id ? action.payload : n)
+      console.log('The state after editing', state.notes)
     }
   }
 })
