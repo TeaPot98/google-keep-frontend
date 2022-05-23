@@ -56,7 +56,7 @@ const ColorButton = ({ color, onClick, note }) => {
                   console.log('Color button clicked!')
               }}
               size="large"
-                  sx={styles.button}
+                  sx={styles.colorButton}
           >
               {color === '#fff' ? 
                   <FormatColorResetOutlinedIcon
