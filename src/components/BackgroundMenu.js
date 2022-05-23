@@ -7,74 +7,9 @@ import { useTheme } from '@emotion/react'
 import { useDispatch } from 'react-redux'
 import { editNote } from '../reducers/noteSlice'
 
-const colors = ['#fff', '#f28b82', '#fbbc04', '#fff475', '#ccff90', '#a7ffeb', '#cbf0f8', '#aecbfa', '#d7aefb', '#fdcfe8', '#e6c9a8', '#e8eaed']
+import ColorButton from './ColorButton'
 
-const ColorButton = ({ color, onClick, note }) => {
-    const styles = {
-        badge: {
-            "& .MuiBadge-badge": {
-                m: 0,
-                p: 0,
-                width: '5px',
-                height: '10px',
-                color: 'white',
-                backgroundColor: theme => theme.palette.other.purple,
-            }
-        },
-        badgeIcon: {
-            m: 0,
-            p: 0,
-        },
-        colorButton: {
-            backgroundColor: color,
-            width: '32px',
-            height: '32px',
-            mx: 0.25,
-            border: theme => `2px solid ${color === '#fff' && color !== note.color ? theme.palette.divider : color === note.color ? theme.palette.other.purple : 'transparent '}`,
-            "&:hover": {
-                backgroundColor: color,
-                borderColor: theme => color === note.color ? theme.palette.other.purple : theme.palette.text.accent
-            }
-        },
-        colorButtonIcon: {
-            color: theme => theme.palette.text.accent
-        }
-    }
-    
-    return (
-        <Badge
-            invisible={note.color !== color}
-            overlap="circular"
-            sx={styles.badge} 
-            badgeContent={
-                note.color === color ? 
-                <CheckOutlinedIcon 
-                    fontSize="15px"
-                    sx={styles.badgeIcon}
-                /> : 
-                null
-            }
-        >
-            <IconButton
-                disableRipple={true}
-                onClick={() => {
-                    onClick()
-                    console.log('Color button clicked!')
-                }}
-                size="large"
-                    sx={styles.button}
-            >
-                {color === '#fff' ? 
-                    <FormatColorResetOutlinedIcon
-                    fontSize="small"
-                        sx={styles.colorButtonIcon}
-                    /> : 
-                    null
-                }
-            </IconButton>
-        </Badge>
-    )
-}
+const colors = ['#fff', '#f28b82', '#fbbc04', '#fff475', '#ccff90', '#a7ffeb', '#cbf0f8', '#aecbfa', '#d7aefb', '#fdcfe8', '#e6c9a8', '#e8eaed']
 
 const BackgroundMenu = ({ open, onClose, anchor, note, handleEditNote = (c) => {} }) => {
     const dispatch = useDispatch()

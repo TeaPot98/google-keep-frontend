@@ -13,7 +13,6 @@ import {
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import AddIcon from '@mui/icons-material/Add'
-import { useTheme } from '@emotion/react'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { editNote } from '../reducers/noteSlice'

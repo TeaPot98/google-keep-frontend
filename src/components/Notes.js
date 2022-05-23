@@ -5,12 +5,11 @@ import {
     Box,
     Typography,
 } from '@mui/material'
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import { useTheme } from '@emotion/react'
 
-import Note from './Note'
+import NoteMasonry from './NoteMasonry'
 
-const Notes = ({ notes, labels, createLabel }) => {
+const Notes = ({ notes, labels }) => {
     const theme = useTheme()
     const { labelName } = useParams()
     // console.log('The param from Router (labelName) >>>', labelName)
@@ -69,32 +68,17 @@ const Notes = ({ notes, labels, createLabel }) => {
                 // id='masonry'
             >
                 {pinnedNotes.length > 0 ?
-                    <Box
-                        sx={{
-                            mb: 5
-                        }}
+                    <Box sx={{ mb: 5}}
                     >
                         <Typography
                             sx={styles.categoryText}
                         >
                             Pinned
                         </Typography>
-                        <ResponsiveMasonry 
-                            columnsCountBreakPoints={{350: 1, 750: 2, 900: 3, 1200: 4, 1900: 6}}
-                        >
-                            <Masonry
-                                gutter="15px"
-                            >
-                                {notesToShow.filter(n => n.pinned).map(n => 
-                                    <Note 
-                                        key={n.id}
-                                        note={n}
-                                        labels={labels}
-                                        createLabel={createLabel}
-                                    />
-                                )}
-                            </Masonry>
-                        </ResponsiveMasonry>
+                        <NoteMasonry 
+                            notes={notesToShow.filter(n => n.pinned)}
+                            labels={labels}
+                        />
                     </Box> :
                     null
                 }
@@ -107,22 +91,10 @@ const Notes = ({ notes, labels, createLabel }) => {
                         </Typography> :
                         null
                     }
-                    <ResponsiveMasonry 
-                        columnsCountBreakPoints={{350: 1, 750: 2, 900: 3, 1200: 4, 1900: 6}}
-                    >
-                        <Masonry
-                            gutter="15px"
-                        >
-                            {notesToShow.filter(n => !n.pinned).map(n => 
-                                <Note 
-                                    key={n.id}
-                                    note={n}
-                                    labels={labels}
-                                    createLabel={createLabel}
-                                />
-                            )}
-                        </Masonry>
-                    </ResponsiveMasonry>
+                    <NoteMasonry 
+                        notes={notesToShow.filter(n => !n.pinned)}
+                        labels={labels}
+                    />
                 </Box>
             </Box> :
             <Box sx={styles.noNotesContainer}>

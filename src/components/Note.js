@@ -323,7 +323,6 @@ const Note = ({ note, labels, createLabel }) => {
                         onClose={closeLabelMenu}
                         note={note}
                         labels={labels}
-                        createLabel={createLabel}
                         handleEditNote={handleEditNote}
                         // labelMenuLocation="Note"
                     />

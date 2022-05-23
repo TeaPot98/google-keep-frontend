@@ -35,7 +35,6 @@ const NoteForm = ({
   onClose,
   newNote,
   isOpen,
-  createLabel,
   labels,
   openLabelMenu,
   closeLabelMenu,
@@ -258,7 +257,6 @@ const NoteForm = ({
                 note={note}
                 labels={labels}
                 changeNote={handleEditNote}
-                createLabel={createLabel}
                 // labelMenuLocation="NoteForm"
             />
         </NoteContainer>

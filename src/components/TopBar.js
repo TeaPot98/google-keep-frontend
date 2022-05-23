@@ -1,6 +1,5 @@
 import React from 'react'
 import { styled, alpha } from '@mui/material/styles'
-import { useTheme } from '@material-ui/core/styles'
 import { 
     Toolbar,
     Box, 
@@ -8,14 +7,7 @@ import {
     IconButton,
     Typography, 
     InputBase,
-    Badge
-
 } from '@mui/material'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import AccountCircle from '@mui/icons-material/AccountCircle'
-import MailIcon from '@mui/icons-material/Mail'
-import RefreshIcon from '@mui/icons-material/Refresh';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import SearchIcon from '@mui/icons-material/Search'
 import MenuIcon from '@mui/icons-material/Menu'
 
