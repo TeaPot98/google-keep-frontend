@@ -39,7 +39,7 @@ const update = async (labelObject) => {
 };
 
 const remove = async (labelId) => {
-    console.log("The id of removed item", labelId);
+    // console.log("The id of removed item", labelId);
     const config = {
         headers: { Authorization: token },
     };

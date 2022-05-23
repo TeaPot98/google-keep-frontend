@@ -53,7 +53,7 @@ const ColorButton = ({ color, onClick, note }) => {
               disableRipple={true}
               onClick={() => {
                   onClick()
-                  console.log('Color button clicked!')
+                //   console.log('Color button clicked!')
               }}
               size="large"
                   sx={styles.colorButton}

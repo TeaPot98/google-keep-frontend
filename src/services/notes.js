@@ -36,7 +36,7 @@ const update = async (noteObject) => {
 };
 
 const remove = async (noteId) => {
-  console.log("The id of removed item", noteId);
+  // console.log("The id of removed item", noteId);
   const config = {
     headers: { Authorization: token },
   };

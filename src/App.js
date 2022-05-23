@@ -29,12 +29,12 @@ const App = () => {
     const location = useLocation()
 
     useEffect(() => {
-        console.log('Fetching labels...')
+        // console.log('Fetching labels...')
         dispatch(fetchLabels())
     }, [])
 
     useEffect(() => {
-        console.log('Fetching notes...')
+        // console.log('Fetching notes...')
         dispatch(fetchNotes())
     }, [])
 
@@ -53,7 +53,7 @@ const App = () => {
     const handleNoteSearch = (searchText) => {
         setSearchString(searchText)
         setFoundNotes(notes.filter(n => n.title.includes(searchString) || n.content.includes(searchString)))
-        console.log('Found notes >>> ', foundNotes)
+        // console.log('Found notes >>> ', foundNotes)
     }
 
 
