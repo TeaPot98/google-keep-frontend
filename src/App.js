@@ -10,9 +10,8 @@ import {
 } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
-import labelService from './services/labels'
 import { fetchNotes, createNote, removeNote, selectNotes, editNote } from './reducers/noteSlice'
-import { selectLabels, fetchLabels, createLabel, removeLabel, editLabel } from './reducers/labelSlice'
+import { selectLabels, fetchLabels } from './reducers/labelSlice'
 
 import TopBar from './components/TopBar'
 import MiniDrawer from './components/MiniDrawer'
@@ -38,59 +37,6 @@ const App = () => {
         console.log('Fetching notes...')
         dispatch(fetchNotes())
     }, [])
-
-    const addNote = async (newNote) => {
-        dispatch(createNote(newNote))
-    }
-
-    const deleteNote = async (noteId) => {
-        dispatch(removeNote(noteId))
-        console.log('The note successfuly removed !')
-    }
-
-    const changeNote = async (updatedNote) => {
-        dispatch(editNote(updatedNote))
-    }
-
-    const createLabel = (newLabel) => {
-        console.log('Creating label from App')
-        dispatch(createLabel(newLabel))
-    }
-
-    const removeLabel = async (labelId) => {
-        dispatch(removeLabel(labelId))
-        // setNotes(notes.map(n => {
-        //     let editedNote = {
-        //         ...n,
-        //         labels: n.labels.filter(l => l.id !== labelId)
-        //     }
-        //     console.log('EditedNote from removeLabel >>> ', editedNote)
-        //     return editedNote
-        // }))
-        notes.map(n => {
-            n.labels.map(l => {
-                if (l.id === labelId) {
-                    changeNote({
-                        ...n,
-                        labels: n.labels.filter(l => l.id !== labelId)
-                    })
-                }
-            })
-        })
-        const response = await labelService.remove(labelId)
-        console.log('Label successfuly removed >>> ', response)
-    }
-
-    const editLabel = async (updatedLabel) => {
-        dispatch(editLabel(updatedLabel))
-        // setNotes(notes.map(n => {
-        //     let editedNote = {
-        //         ...n,
-        //         labels: n.labels.map(l => l.id !== updatedLabel.id ? l : updatedLabel)
-        //     }
-        //     return editedNote
-        // }))
-    }
 
     const openDrawer = () => {
         setDrawerOpen(!drawerOpen)
@@ -127,9 +73,6 @@ const App = () => {
                 <MiniDrawer 
                     open={drawerOpen} 
                     labels={labels}
-                    removeLabel={removeLabel}
-                    createLabel={createLabel}
-                    editLabel={editLabel}
                     // onMouseEnter={() => setDrawerOpen(true)}
                 />
                 <Box 
@@ -142,7 +85,6 @@ const App = () => {
                     {searchString === '' && location.pathname !== '/archive' && location.pathname !== '/trash' ?
                         <NewNote 
                             labels={labels}
-                            createLabel={createLabel}
                         /> :
                         null
                     }
@@ -153,7 +95,6 @@ const App = () => {
                                 <Notes 
                                     notes={searchString === '' ? notes.filter(n => !n.deleted && !n.archived) : foundNotes.filter(n => !n.deleted && !n.archived)} 
                                     labels={labels}
-                                    createLabel={createLabel}
                                 />
                             }
                         />
@@ -167,7 +108,6 @@ const App = () => {
                                 <Notes 
                                     notes={notes} 
                                     labels={labels}
-                                    createLabel={createLabel}
                                 />
                             }
                         />
@@ -177,7 +117,6 @@ const App = () => {
                                 <Notes 
                                     notes={notes.filter(n => n.archived && !n.deleted)} 
                                     labels={labels}
-                                    createLabel={createLabel}
                                 />
                             }
                         />
@@ -187,16 +126,10 @@ const App = () => {
                                 <Notes 
                                     notes={notes.filter(n => n.deleted)} 
                                     labels={labels}
-                                    createLabel={createLabel}
                                 />
                             }
                         />
                     </Routes>
-                    {/* <Notes 
-                        notes={notes} 
-                        deleteNote={deleteNote}
-                        changeNote={changeNote}
-                    /> */}
                 </Box>
             </Box>
         </ThemeProvider>

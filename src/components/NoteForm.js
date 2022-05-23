@@ -8,17 +8,22 @@ import {
   Checkbox,
   Dialog,
 } from '@mui/material'
-import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
-import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
-import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
-import PushPinIcon from '@mui/icons-material/PushPin';
-import { ArchiveOutlined } from '@mui/icons-material';
+
+import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
+import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined'
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined'
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined'
+import PushPinIcon from '@mui/icons-material/PushPin'
+import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined'
+import { ArchiveOutlined } from '@mui/icons-material'
+
+import { useDispatch } from 'react-redux'
+import { editNote } from '../reducers/noteSlice'
 
 import NoteContainer from './NoteContainer'
 import NoteButton from './NoteButton'
-import BackgroundMenu from './BackgroundMenu';
+import BackgroundMenu from './BackgroundMenu'
 import LabelMenu from './LabelMenu'
 import LabelChipArray from './LabelChipArray'
 
@@ -39,6 +44,7 @@ const NoteForm = ({
 }) => {
   const [anchorNoteForm, setAnchorNoteForm] = useState(null)
   const open = Boolean(anchorNoteForm)
+  const dispatch = useDispatch()
 
   const handleClick = (event) => {
     setAnchorNoteForm(event.currentTarget)
@@ -56,6 +62,54 @@ const NoteForm = ({
     handleEditNote(updNote)
     changeNote(updNote)
   }
+
+  const styles = {
+    noteContainer: {
+      backgroundColor: note.color,
+      transition: 'background-color 0.218s ease-in-out',
+      mt: newNote ? 3 : 'auto', 
+      mb: newNote ? 0 : 'auto',
+      mx: 'auto',
+      border: `1px solid ${theme => theme.palette.divider}`,
+      position: newNote ? 'default' : 'fixed',
+      display: newNote ? 'block' : isOpen ? 'inline-table' : 'none',
+      height: 'auto',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      maxWidth: '600px',
+      // maxHeight: '70vh',
+      zIndex: newNote ? 'auto' : 2001
+    },
+    titleContainer: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      cursor: 'text',
+    },
+    titleText: {
+      label: { color: theme => theme.palette.text.accent },
+      mt: theme => theme.spacing(1),
+      ml: theme => theme.spacing(2),
+    },
+    contentContainer: {
+      px: theme => theme.spacing(2),
+      pb: theme => theme.spacing(1),
+      cursor: 'text',
+      maxHeight: '60vh',
+      overflow: 'auto',
+    },
+    buttonsContainer: {
+      display: 'flex',
+      justifyContent: 'end',
+      gap: theme => theme.spacing(2),
+      ml: theme => theme.spacing(2),
+      mr: theme => theme.spacing(3)
+    },
+    buttonText: {
+      color: theme => theme.palette.text.accent
+    },
+  }
   
   // console.log('The note object passed to NoteForm >>> ', note)
   return (
@@ -69,32 +123,11 @@ const NoteForm = ({
             elevation={4} 
             // variant="outlined"
             className="noteContainer"
-            sx={{
-                backgroundColor: note.color,
-                transition: 'background-color 0.218s ease-in-out',
-                mt: newNote ? 3 : 'auto', 
-                mb: newNote ? 0 : 'auto',
-                mx: 'auto',
-                border: `1px solid ${theme => theme.palette.divider}`,
-                position: newNote ? 'default' : 'fixed',
-                display: newNote ? 'block' : isOpen ? 'inline-table' : 'none',
-                height: 'auto',
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-                maxWidth: '600px',
-                // maxHeight: '70vh',
-                zIndex: newNote ? 'auto' : 2001
-            }}
+            sx={styles.noteContainer}
         >
             <Box>
                 <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        cursor: 'text',
-                    }}
+                    sx={styles.titleContainer}
                 >
                     <TextField 
                       fullWidth 
@@ -102,11 +135,7 @@ const NoteForm = ({
                       InputProps={{
                         disableUnderline: true
                       }}
-                      sx={{
-                        label: { color: theme => theme.palette.text.accent },
-                        mt: theme => theme.spacing(1),
-                        ml: theme => theme.spacing(2),
-                      }}
+                      sx={styles.titleText}
                       placeholder="Title"
                       onChange={(event) => handleEditNote({
                         ...note,
@@ -136,13 +165,7 @@ const NoteForm = ({
                     />
                 </Box>
                 <Box
-                    sx={{
-                        px: theme => theme.spacing(2),
-                        pb: theme => theme.spacing(1),
-                        cursor: 'text',
-                        maxHeight: '60vh',
-                        overflow: 'auto',
-                    }}
+                    sx={styles.contentContainer}
                 >
                     <TextField 
                       fullWidth 
@@ -163,13 +186,7 @@ const NoteForm = ({
                 </Box>
             </Box>
             <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'end',
-                    gap: theme => theme.spacing(2),
-                    ml: theme => theme.spacing(2),
-                    mr: theme => theme.spacing(3)
-                }}
+                sx={styles.buttonsContainer}
             >
                 <NoteButton
                     onClick={handleClick}
@@ -190,10 +207,20 @@ const NoteForm = ({
                     <LabelOutlinedIcon fontSize='small'/>
                 </NoteButton>
                 <NoteButton
-                    onClick={() => {}}
-                    tooltip="Archive"
+                    onClick={(event) => {
+                            event.stopPropagation()
+                            dispatch(editNote({
+                                ...note,
+                                archived: !note.archived
+                            }))
+                        }
+                    }
+                    tooltip={note.archived ? "Unarchive" : "Archive"}
                 >
-                    <ArchiveOutlined fontSize='small'/>
+                    {note.archived ? 
+                        <UnarchiveOutlinedIcon fontSize="small"/> :
+                        <ArchiveOutlined fontSize='small'/>
+                    }
                 </NoteButton>
                 {newNote ?
                   null : 
@@ -210,9 +237,7 @@ const NoteForm = ({
                     tooltip=""
                 >
                     <Typography 
-                      sx={{
-                        color: theme => theme.palette.text.accent
-                      }}
+                      sx={styles.buttonText}
                     >
                       Close
                     </Typography>

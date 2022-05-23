@@ -19,6 +19,13 @@ const LabelChipArray = ({ note }) => {
         }))
     }
     // console.log('The note object passed to ChipArray', note)
+    const styles = {
+        chip: {
+            ml: theme => theme.spacing(1),
+            mt: theme => theme.spacing(0.5)
+        }
+    }
+    
     return (
         <Box
             sx={{
@@ -32,10 +39,7 @@ const LabelChipArray = ({ note }) => {
                     key={label.id}
                     size="small"
                     label={label.name}
-                    sx={{
-                        ml: theme => theme.spacing(1),
-                        mt: theme => theme.spacing(0.5)
-                    }}
+                    sx={styles.chip}
                     onClick={(event) => {
                         event.stopPropagation()
                         navigate(`/label/${label.name}`)

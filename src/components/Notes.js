@@ -6,10 +6,12 @@ import {
     Typography,
 } from '@mui/material'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+import { useTheme } from '@emotion/react'
 
 import Note from './Note'
 
 const Notes = ({ notes, labels, createLabel }) => {
+    const theme = useTheme()
     const { labelName } = useParams()
     // console.log('The param from Router (labelName) >>>', labelName)
     let notesToShow = [...notes]
@@ -19,7 +21,7 @@ const Notes = ({ notes, labels, createLabel }) => {
         const filteredNotes = []
         notes.map(n => {
             for (let i = 0; i < n.labels.length; i++) {
-                console.log(n.labels[i].name)
+                // console.log(n.labels[i].name)
                 if (n.labels[i].name === labelName) {
                     filteredNotes.push(n)
                 }
@@ -30,40 +32,88 @@ const Notes = ({ notes, labels, createLabel }) => {
     }
     
     let pinnedNotes = notesToShow.filter(n => n.pinned)
+
+    const styles = {
+        container: { 
+            zIndex: theme => theme.zIndex.drawer,
+            padding: 5
+        },
+        categoryText: {
+            textTransform: 'uppercase',
+            fontSize: '0.75rem',
+            fontWeight: 500,
+            color: theme => theme.palette.text.primary,
+            my: 1,
+            mx: 2
+        },
+        noNotesContainer: {
+            display: 'flex',
+            flexDirection: 'column',
+            height: '80vh',
+            alignItems: 'center',
+            justifyContent: 'center',
+            m: 'auto',
+            '& p': {
+                display: 'block',
+                fontSize: '1.5rem',
+                color: theme.palette.text.disabled
+            }
+        },
+    }
     
     return (
-        <Box 
-            sx={{ 
-                zIndex: theme => theme.zIndex.drawer,
-                padding: 5
-            }}
-            // id='masonry'
-        >
-            {pinnedNotes.length > 0 ?
-                <Box
-                    sx={{
-                        mb: 5
-                    }}
-                >
-                    <Typography
+        <>
+        {notesToShow.length > 0 ?
+            <Box 
+                sx={styles.container}
+                // id='masonry'
+            >
+                {pinnedNotes.length > 0 ?
+                    <Box
                         sx={{
-                            textTransform: 'uppercase',
-                            fontSize: '0.75rem',
-                            fontWeight: 500,
-                            color: theme => theme.palette.text.primary,
-                            my: 1,
-                            mx: 2
+                            mb: 5
                         }}
                     >
-                        Pinned
-                    </Typography>
+                        <Typography
+                            sx={styles.categoryText}
+                        >
+                            Pinned
+                        </Typography>
+                        <ResponsiveMasonry 
+                            columnsCountBreakPoints={{350: 1, 750: 2, 900: 3, 1200: 4, 1900: 6}}
+                        >
+                            <Masonry
+                                gutter="15px"
+                            >
+                                {notesToShow.filter(n => n.pinned).map(n => 
+                                    <Note 
+                                        key={n.id}
+                                        note={n}
+                                        labels={labels}
+                                        createLabel={createLabel}
+                                    />
+                                )}
+                            </Masonry>
+                        </ResponsiveMasonry>
+                    </Box> :
+                    null
+                }
+                <Box>
+                    {pinnedNotes.length > 0 ?
+                        <Typography
+                            sx={styles.categoryText}
+                        >
+                            Others
+                        </Typography> :
+                        null
+                    }
                     <ResponsiveMasonry 
-                        columnsCountBreakPoints={{350: 1, 750: 2, 900: 3}}
+                        columnsCountBreakPoints={{350: 1, 750: 2, 900: 3, 1200: 4, 1900: 6}}
                     >
                         <Masonry
                             gutter="15px"
                         >
-                            {notesToShow.filter(n => n.pinned).map(n => 
+                            {notesToShow.filter(n => !n.pinned).map(n => 
                                 <Note 
                                     key={n.id}
                                     note={n}
@@ -73,43 +123,15 @@ const Notes = ({ notes, labels, createLabel }) => {
                             )}
                         </Masonry>
                     </ResponsiveMasonry>
-                </Box> :
-                null
-            }
-            <Box>
-                {pinnedNotes.length > 0 ?
-                    <Typography
-                        sx={{
-                            textTransform: 'uppercase',
-                            fontSize: '0.75rem',
-                            fontWeight: 500,
-                            color: theme => theme.palette.text.primary,
-                            my: 1,
-                            mx: 2
-                        }}
-                    >
-                        Others
-                    </Typography> :
-                    null
-                }
-                <ResponsiveMasonry 
-                    columnsCountBreakPoints={{350: 1, 750: 2, 900: 3}}
-                >
-                    <Masonry
-                        gutter="15px"
-                    >
-                        {notesToShow.filter(n => !n.pinned).map(n => 
-                            <Note 
-                                key={n.id}
-                                note={n}
-                                labels={labels}
-                                createLabel={createLabel}
-                            />
-                        )}
-                    </Masonry>
-                </ResponsiveMasonry>
+                </Box>
+            </Box> :
+            <Box sx={styles.noNotesContainer}>
+                <Typography>
+                    No notes here
+                </Typography>
             </Box>
-        </Box>
+        }
+        </>
     )
 }
 

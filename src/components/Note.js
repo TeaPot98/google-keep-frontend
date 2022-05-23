@@ -17,7 +17,7 @@ import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined'
 import { useTheme } from '@emotion/react'
 
 import { useDispatch } from 'react-redux'
-import { editNote } from '../reducers/noteSlice'
+import { editNote, removeNote } from '../reducers/noteSlice'
 
 import NoteButton from './NoteButton'
 import BackgroundMenu from './BackgroundMenu'
@@ -26,7 +26,7 @@ import NoteForm from './NoteForm'
 import LabelMenu from './LabelMenu'
 import LabelChipArray from './LabelChipArray'
 
-const Note = ({ note, labels, deleteNote, createLabel }) => {
+const Note = ({ note, labels, createLabel }) => {
     const theme = useTheme()
     const dispatch = useDispatch()
 
@@ -101,11 +101,6 @@ const Note = ({ note, labels, deleteNote, createLabel }) => {
         setLabelAnchorElF(null)
     }
 
-    const removeNote = async (event) => {
-        event.stopPropagation()
-        await deleteNote(note.id)
-    }
-
     // Updates the editedNote to keep state up to date while editing
     const handleEditNote = (updatedNote) => {
         setEditedNote(updatedNote)
@@ -142,7 +137,35 @@ const Note = ({ note, labels, deleteNote, createLabel }) => {
             borderColor: note.color === '#fff' ? theme.palette.divider : 'transparent',
             transition: 'box-shadow 0.118s ease-in-out',
             zIndex: 1,
-        }
+        },
+        titleContainer: {
+            display: 'flex',
+            justifyContent: 'space-between'
+        },
+        title: {
+            mt: theme => theme.spacing(1),
+            ml: theme => theme.spacing(2),
+            cursor: 'default',
+            color: theme => theme.palette.text.accent,
+            textOverflow: 'ellipsis',
+            overflow: 'hidden'
+        },
+        contentContainer: {
+            px: theme => theme.spacing(2),
+            maxHeight: '300px',
+            overflow: 'hidden'
+        },
+        contentText: {
+            cursor: 'default',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            fontFamily: 'Roboto, sans-serif',
+            whiteSpace: 'pre-wrap',
+        },
+        buttonsContainer: {
+            display: 'flex',
+            justifyContent: 'start'
+        },
     }
 
     // console.log('The note from Note', note)
@@ -160,22 +183,12 @@ const Note = ({ note, labels, deleteNote, createLabel }) => {
                 >
                     <Box>
                         <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between'
-                            }}
+                            sx={styles.titleContainer}
                         >
                             <Typography 
                                 variant="subtitle1" 
                                 component="p"
-                                sx={{
-                                    mt: theme => theme.spacing(1),
-                                    ml: theme => theme.spacing(2),
-                                    cursor: 'default',
-                                    color: theme => theme.palette.text.accent,
-                                    textOverflow: 'ellipsis',
-                                    overflow: 'hidden'
-                                }}
+                                sx={styles.title}
                             >
                                 {note.title}
                             </Typography>
@@ -205,22 +218,12 @@ const Note = ({ note, labels, deleteNote, createLabel }) => {
                             }
                         </Box>
                         <Box
-                            sx={{
-                                px: theme => theme.spacing(2),
-                                maxHeight: '300px',
-                                overflow: 'hidden'
-                            }}
+                            sx={styles.contentContainer}
                         >
                             <Typography 
                                 component="pre"
                                 variant="inherit"
-                                sx={{
-                                    cursor: 'default',
-                                    textOverflow: 'ellipsis',
-                                    overflow: 'hidden',
-                                    fontFamily: 'Roboto, sans-serif',
-                                    whiteSpace: 'pre-wrap',
-                                }}
+                                sx={styles.contentText}
                             >
                                 {note.content}
                             </Typography>
@@ -230,10 +233,7 @@ const Note = ({ note, labels, deleteNote, createLabel }) => {
                         />
                     </Box>
                     <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'start'
-                        }}
+                        sx={styles.buttonsContainer}
                     >
                         {note.deleted ?
                             <>
@@ -250,7 +250,10 @@ const Note = ({ note, labels, deleteNote, createLabel }) => {
                                     <RestoreFromTrashOutlinedIcon fontSize='small'/>
                                 </NoteButton>
                                 <NoteButton
-                                    onClick={removeNote}
+                                    onClick={(event) => {
+                                        event.stopPropagation()
+                                        dispatch(removeNote(note.id))
+                                    }}
                                     tooltip="Delete forever"
                                 >
                                     <DeleteForeverOutlinedIcon fontSize='small'/>
@@ -329,7 +332,6 @@ const Note = ({ note, labels, deleteNote, createLabel }) => {
             <NoteForm 
                 handleEditNote={handleEditNote}
                 note={editedNote}
-                deleteNote={deleteNote}
                 onClose={handleNoteFormClose}
                 newNote={false}
                 isOpen={openNoteForm}

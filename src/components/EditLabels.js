@@ -24,13 +24,22 @@ const EditLabels = ({
     const dispatch = useDispatch()
     const labels = useSelector(selectLabels)
 
+    const styles = {
+        dialogTitle: {
+            fontSize: '1rem',
+            color: theme => theme.palette.text.accent
+        },
+        labelTextField: {
+            label: { color: theme => theme.palette.text.accent },
+            mt: theme => theme.spacing(1),
+            ml: theme => theme.spacing(2),
+        },
+    }
+    
     return (
         <Dialog onClose={onClose} open={open}>
             <DialogTitle
-                sx={{
-                    fontSize: '1rem',
-                    color: theme => theme.palette.text.accent
-                }}
+                sx={styles.dialogTitle}
             >
                 Edit labels
             </DialogTitle>
@@ -50,11 +59,7 @@ const EditLabels = ({
                         disableUnderline: true
                     }}
                     onChange={(event) => setNewLabelField(event.target.value)}
-                    sx={{
-                        label: { color: theme => theme.palette.text.accent },
-                        mt: theme => theme.spacing(1),
-                        ml: theme => theme.spacing(2),
-                    }}
+                    sx={styles.labelTextField}
                     placeholder="Create new label"
                 />
                 <Tooltip title="Create label">
@@ -102,6 +107,14 @@ const EditLabelItem = ({ label, removeLabel, editLabel }) => {
         dispatch(removeLabel(label.id))
     }
 
+    const styles = {
+        labelTextField: {
+            label: { color: theme => theme.palette.text.accent },
+            mt: theme => theme.spacing(1),
+            ml: theme => theme.spacing(2),
+        },
+    }
+
     return (
         <ListItem
             dense={true}
@@ -119,11 +132,7 @@ const EditLabelItem = ({ label, removeLabel, editLabel }) => {
                     disableUnderline: true
                 }}
                 onChange={(event) => setValue(event.target.value)}
-                sx={{
-                    label: { color: theme => theme.palette.text.accent },
-                    mt: theme => theme.spacing(1),
-                    ml: theme => theme.spacing(2),
-                }}
+                sx={styles.labelTextField}
                 placeholder="Title"
             />
             <Tooltip title="Rename label">

@@ -60,16 +60,32 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }))
 
 const TopBar = ({ openDrawer, searchString, handleNoteSearch }) => {
+    const styles = {
+        appBar: {
+            borderBottomStyle: 'solid',
+            borderBottomWidth: 1,
+            borderBottomColor: theme => theme.palette.divider,
+            zIndex: theme => theme.zIndex.drawer + 1
+        },
+        drawerButton: { 
+            mr: 2 
+        },
+        appNameText: { 
+            display: { 
+                xs: 'none', 
+                sm: 'block' 
+            } 
+        },
+        buttonsContainer: { 
+            display: 'flex' 
+        },
+    }
+    
     return (
         <Box>
             <AppBar 
                 elevation={0} 
-                sx={{
-                    borderBottomStyle: 'solid',
-                    borderBottomWidth: 1,
-                    borderBottomColor: theme => theme.palette.divider,
-                    zIndex: theme => theme.zIndex.drawer + 1
-                }}
+                sx={styles.appBar}
             >
                 <Toolbar>
                     <IconButton
@@ -77,7 +93,7 @@ const TopBar = ({ openDrawer, searchString, handleNoteSearch }) => {
                         edge='start'
                         aria-label='open drawer'
                         onClick={openDrawer}
-                        sx={{ mr: 2 }}
+                        sx={styles.drawerButton}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -86,7 +102,7 @@ const TopBar = ({ openDrawer, searchString, handleNoteSearch }) => {
                         noWrap
                         component='div'
                         color='default'
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
+                        sx={styles.appNameText}
                     >
                         Keep
                     </Typography>
@@ -101,7 +117,7 @@ const TopBar = ({ openDrawer, searchString, handleNoteSearch }) => {
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: 'flex' }} >
+                    <Box sx={styles.buttonsContainer} >
                         {/* <IconButton
                             size='large'
                         >

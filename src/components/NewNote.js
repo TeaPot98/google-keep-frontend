@@ -4,10 +4,14 @@ import {
   Typography, 
   Box
 } from '@mui/material'
-import NoteForm from './NoteForm'
+import NewNoteForm from './NewNoteForm'
 import { useTheme } from '@emotion/react'
 
-const NewNote = ({ labels, addNote, deleteNote, createLabel }) => {
+import { useDispatch } from 'react-redux'
+import { createNote } from '../reducers/noteSlice'
+
+const NewNote = ({ labels }) => {
+  const dispatch = useDispatch()
   const theme = useTheme()
 
   // Label menu anchor
@@ -19,7 +23,7 @@ const NewNote = ({ labels, addNote, deleteNote, createLabel }) => {
     title: '',
     content: '',
     pinned: false,
-    color: theme.palette.primary.main,
+    color: '#fff',
     labels: []
   })
 
@@ -40,11 +44,15 @@ const NewNote = ({ labels, addNote, deleteNote, createLabel }) => {
     setNote(newNote)
   }
 
+  const openNoteForm = async () => {
+    setActive(true)
+  }
+
   const closeNoteForm = async () => {
     // console.log('Clicked away !')
     setActive(false)
     if (note.title !== '' || note.content !== '') {
-      await addNote(note)
+      await dispatch(createNote(note))
     }
     setNote({
       title: '',
@@ -54,58 +62,60 @@ const NewNote = ({ labels, addNote, deleteNote, createLabel }) => {
       labels: []
     })
   }
+  
+  const styles = {
+    container: {
+      display: 'block',
+      animationDuration: '3s',
+      animationName: 'slidein',
+    },
+    noteFormWrapper: {
+      mx: 'auto',
+      maxWidth: '600px',
+    },
+    newNotePaper: { 
+      mt: 3, 
+      mx: 'auto',
+      py: 1,
+      px: 2,
+      cursor: 'text',
+      border: `1px solid ${theme => theme.palette.divider}`,
+      maxWidth: '568px',
+    },
+    placeholderText: {
+      color: theme => theme.palette.text.primary,
+    },
+  }
 
   return (
     <Box
-      sx={{
-        display: 'block',
-        animationDuration: '3s',
-        animationName: 'slidein',
-      }}
+      sx={styles.container}
     >
       {active ?
         <Box
-          sx={{
-            mx: 'auto',
-            maxWidth: '600px',
-          }}
+          sx={styles.noteFormWrapper}
         >
-              <NoteForm 
-                handleEditNote={handleEditNote}
-                note={note}
-                labels={labels}
-                deleteNote={deleteNote}
-                changeColor={handleColorChange}
-                onClose={closeNoteForm}
-                newNote={true}
-                onClickAway={closeNoteForm}
-                isOpen={true}
-                createLabel={createLabel}
-                closeLabelMenu={closeLabelMenuF}
-                openLabelMenu={openLabelMenuF}
-                labelAnchorEl={labelAnchorElF}
-                labelMenuOpen={labelMenuOpenF}
-              />
+          <NewNoteForm 
+            handleEditNote={handleEditNote}
+            note={note}
+            changeColor={handleColorChange}
+            onClose={closeNoteForm}
+            onClickAway={closeNoteForm}
+            closeLabelMenu={closeLabelMenuF}
+            openLabelMenu={openLabelMenuF}
+            labelAnchorEl={labelAnchorElF}
+            labelMenuOpen={labelMenuOpenF}
+          />
         </Box> :
         <Paper 
           elevation={4} 
-          onClick={() => setActive(true)}
-          sx={{ 
-            mt: 3, 
-            mx: 'auto',
-            py: 1,
-            px: 2,
-            cursor: 'text',
-            border: `1px solid ${theme => theme.palette.divider}`,
-            maxWidth: '568px',
-          }}
+          onClick={openNoteForm}
+          sx={styles.newNotePaper}
         >
           <Typography 
             variant="subtitle1" 
             component="p"
-            sx={{
-              color: theme => theme.palette.text.primary,
-            }}
+            sx={styles.placeholderText}
           >
             New note...
           </Typography>

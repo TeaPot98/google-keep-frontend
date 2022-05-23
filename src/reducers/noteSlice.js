@@ -39,7 +39,8 @@ export const createNote = newNote => async dispatch => {
   try {
     const response = await noteService.create(newNote)
     console.log('New note added >>>', response)
-    dispatch(add(newNote))
+    dispatch(add(response))
+    return response
   } catch (error) {
     console.log(error)
   }

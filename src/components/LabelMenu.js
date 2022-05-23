@@ -25,6 +25,7 @@ const LabelMenu = ({
     open, 
     onClose, 
     note, 
+    changeNote,
     // labelMenuLocation
 }) => {
     const dispatch = useDispatch()
@@ -44,11 +45,18 @@ const LabelMenu = ({
 
     const createNewLabel = async () => {
         const addedLabel = await dispatch(createLabel(labelSearchString))
-        dispatch(editNote({
-            ...note,
-            labels: [...note.labels, addedLabel]
-        }))
-        console.log(addedLabel)
+        if (changeNote) {
+            changeNote({
+                ...note,
+                labels: [...note.labels, addedLabel]
+            })
+        } else {
+            dispatch(editNote({
+                ...note,
+                labels: [...note.labels, addedLabel]
+            }))
+        }
+        // console.log(addedLabel)
         setLabelSearchString('')
         setLabelsToShow([...labels, addedLabel])
     }
@@ -56,15 +64,29 @@ const LabelMenu = ({
     const addLabel = (event, currentLabel) => {
         const labelChecked = note.labels.map(l => l.id).includes(currentLabel.id)
         if (labelChecked) {
-            return dispatch(editNote({
-                ...note,
-                labels: note.labels.filter(l => l.id !== currentLabel.id)
-            }))
+            if (changeNote) {
+                changeNote({
+                    ...note,
+                    labels: note.labels.filter(l => l.id !== currentLabel.id)
+                })
+            } else {
+                dispatch(editNote({
+                    ...note,
+                    labels: note.labels.filter(l => l.id !== currentLabel.id)
+                }))
+            }
         } else {
-            return dispatch(editNote({
-                ...note,
-                labels: [...note.labels, currentLabel]
-            }))
+            if (changeNote) {
+                changeNote({
+                    ...note,
+                    labels: [...note.labels, currentLabel]
+                })
+            } else {
+                dispatch(editNote({
+                    ...note,
+                    labels: [...note.labels, currentLabel]
+                }))
+            }
         }
     }
 
@@ -73,25 +95,57 @@ const LabelMenu = ({
         onClose()
     }
 
+    const styles = {
+        container: {
+            zIndex: 2002,
+        },
+        header: {
+            px: theme => theme.spacing(1)
+        },
+        headerTitle: {
+            fontSize: '0.9rem',
+            color: theme => theme.palette.text.accent
+        },
+        searchField: {
+            // Target and style the placeholder!!
+            "& input::placeholder": {
+                fontSize: '0.85rem'
+            }
+        },
+        searchIcon: {
+            color: theme => theme.palette.text.hint,
+            fontSize: '1rem'
+        },
+        labelList: {
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'auto',
+            maxHeight: '400px',
+            px: theme => theme.spacing(1)
+        },
+        labelCheckbox: {
+            color: theme => theme.palette.text.secondary,
+            "&.Mui-checked": {
+                color: theme => theme.palette.text.secondary,
+            }
+        },
+        labelName: {
+            fontSize: '0.85rem',
+        },
+    }
+
     return (
         <Menu
             anchorEl={anchor}
             open={open}
             onClose={handleClose}
-            sx={{
-                zIndex: 2002,
-            }}
+            sx={styles.container}
         >
             <Box
-                sx={{
-                    px: theme => theme.spacing(1)
-                }}
+                sx={styles.header}
             >    
                 <Typography
-                    sx={{
-                        fontSize: '0.9rem',
-                        color: theme => theme.palette.text.accent
-                    }}
+                    sx={styles.headerTitle}
                 >
                     Label note
                 </Typography>
@@ -99,22 +153,14 @@ const LabelMenu = ({
                     fullWidth
                     variant="standard"   
                     placeholder="Enter label name"
-                    sx={{
-                        // Target and style the placeholder!!
-                        "& input::placeholder": {
-                            fontSize: '0.85rem'
-                        }
-                    }}
+                    sx={styles.searchField}
                     value={labelSearchString}
                     onChange={handleLabelSearch}
                     InputProps={{
                         endAdornment:  
                             <InputAdornment position="end">
                                 <SearchIcon 
-                                    sx={{
-                                        color: theme => theme.palette.text.hint,
-                                        fontSize: '1rem'
-                                    }}
+                                    sx={styles.searchIcon}
                                 />
                             </InputAdornment>,
                         disableUnderline: true,
@@ -123,13 +169,7 @@ const LabelMenu = ({
             </Box>
                 {labelsToShow.length > 0 ?
                     <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        overflow: 'auto',
-                        maxHeight: '400px',
-                        px: theme => theme.spacing(1)
-                    }}
+                    sx={styles.labelList}
                     >
                     {labelsToShow.map((l) => 
                             <FormControlLabel
@@ -139,19 +179,12 @@ const LabelMenu = ({
                                         size="small" 
                                         checked={note.labels.map(l => l.id).includes(l.id)}
                                         onChange={(event) => addLabel(event, l)}
-                                        sx={{
-                                            color: theme => theme.palette.text.secondary,
-                                            "&.Mui-checked": {
-                                                color: theme => theme.palette.text.secondary,
-                                            }
-                                        }}
+                                        sx={styles.labelCheckbox}
                                     />
                                 }
                                 label={
                                     <Typography
-                                        sx={{
-                                            fontSize: '0.85rem',
-                                        }}
+                                        sx={styles.labelName}
                                     >
                                         {l.name}
                                     </Typography>
@@ -175,9 +208,7 @@ const LabelMenu = ({
                         <ListItemText>
                             <Typography
                                 component="p"
-                                sx={{
-                                    fontSize: '0.85rem'
-                                }}
+                                sx={styles.labelName}
                             >
                                 Create <b>"{labelSearchString}"</b>
                             </Typography>
