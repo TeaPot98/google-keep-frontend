@@ -4,6 +4,7 @@ import '../style.css'
 import {
     Box,
     Typography,
+    Container,
 } from '@mui/material'
 import { useTheme } from '@emotion/react'
 
@@ -63,7 +64,8 @@ const Notes = ({ notes, labels }) => {
     return (
         <>
         {notesToShow.length > 0 ?
-            <Box 
+            <Container 
+                maxWidth="xl"
                 sx={styles.container}
                 // id='masonry'
             >
@@ -96,7 +98,7 @@ const Notes = ({ notes, labels }) => {
                         labels={labels}
                     />
                 </Box>
-            </Box> :
+            </Container> :
             <Box sx={styles.noNotesContainer}>
                 <Typography>
                     No notes here
