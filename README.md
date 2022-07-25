@@ -21,10 +21,10 @@ LIVE DEMO https://infinite-wildwood-73342.herokuapp.com/
 
 ## Screenshots
 
-![all notes]([https://media3.giphy.com/media/AFbp4tFByUFeBjHoyu/giphy.gif?cid=790b7611d848b57fe68f48a28bc509749f68bca22d757406&rid=giphy.gif&ct=g](https://imgur.com/5ewJnKq))
-![edit note]([https://media3.giphy.com/media/0y21oYZwuksjS2qjkz/giphy.gif](https://imgur.com/QBo7g1v))
-![change background color]([https://i.imgur.com/KMUSuim.png](https://imgur.com/KhcNBa3))
-![labels]([https://i.imgur.com/IlbI8SD.png](https://imgur.com/XYqR5E6))
+![all notes](https://imgur.com/5ewJnKq)
+![edit note](https://imgur.com/QBo7g1v)
+![change background color](https://imgur.com/KhcNBa3)
+![labels](https://imgur.com/KhcNBa3)
 
 # Getting Started with Create React App
 
