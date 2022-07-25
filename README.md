@@ -1,3 +1,31 @@
+# Google Keep clone
+Google Keep clone made with React and MaterialUI
+
+Repository of back-end: https://github.com/TeaPot98/phonebook-backend
+## Features
+
+- Add, edit, archive and remove notes
+- Change note's color
+- Add labels to note
+- Search note by title/content
+- Responsive design
+## Made using
+- React.js
+- MaterialUI
+- Redux
+- React Router
+## Demo
+
+LIVE DEMO https://infinite-wildwood-73342.herokuapp.com/
+
+
+## Screenshots
+
+![all notes]([https://media3.giphy.com/media/AFbp4tFByUFeBjHoyu/giphy.gif?cid=790b7611d848b57fe68f48a28bc509749f68bca22d757406&rid=giphy.gif&ct=g](https://imgur.com/5ewJnKq))
+![edit note]([https://media3.giphy.com/media/0y21oYZwuksjS2qjkz/giphy.gif](https://imgur.com/QBo7g1v))
+![change background color]([https://i.imgur.com/KMUSuim.png](https://imgur.com/KhcNBa3))
+![labels]([https://i.imgur.com/IlbI8SD.png](https://imgur.com/XYqR5E6))
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
