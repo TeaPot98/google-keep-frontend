@@ -24,7 +24,7 @@ LIVE DEMO https://infinite-wildwood-73342.herokuapp.com/
 ![all notes](https://i.imgur.com/5ewJnKq.png)
 ![edit note](https://imgur.com/QBo7g1v.png)
 ![change background color](https://imgur.com/KhcNBa3.png)
-![labels](https://imgur.com/KhcNBa3.png)
+![labels](https://imgur.com/XYqR5E6.png)
 
 # Getting Started with Create React App
 
