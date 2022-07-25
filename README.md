@@ -1,7 +1,7 @@
 # Google Keep clone
 Google Keep clone made with React and MaterialUI
 
-Repository of back-end: https://github.com/TeaPot98/phonebook-backend
+Repository of back-end: https://github.com/TeaPot98/google-keep-backend
 ## Features
 
 - Add, edit, archive and remove notes
